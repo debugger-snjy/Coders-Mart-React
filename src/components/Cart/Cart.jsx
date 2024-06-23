@@ -36,19 +36,19 @@ function Cart() {
                             <h1 className="text-xl font-bold tracking-tight text-gray-900 sm:text-2xl dark:text-white"> Shopping Cart
                             </h1>
                         </div>
-                        <div>
+                        {/* <div>
                             <button type="button" className="px-10 py-3 bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-200  font-medium rounded-lg text-sm text-center inline-flex items-center me-2 mb-2">
                                 <svg className="w-5 h-5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill={themeMode === "light" ? "white" : "black"} viewBox="0 0 20 20">
                                     <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z" />
                                 </svg>
                                 <span className="text-lg text-white dark:text-black font-bold" disabled={cartItems.length === 0}>Empty My Cart</span>
                             </button>
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Checking the cart items length, If length is zero, then showing message that cart is empty   */}
                     {
-                        cartItems.length === 0 && <div className='text-1xl font-bold text-center text-red-600 my-14' style={{ height: "60vh" }}>
+                        (JSON.parse(localStorage.getItem("allcartItems")) ? JSON.parse(localStorage.getItem("allcartItems")).cartItems.length : 0) === 0 && <div className='text-1xl font-bold text-center text-red-600 my-14' style={{ height: "60vh" }}>
                             <div className="flex flex-col items-center justify-center">
                                 <img src={emptyCart} className='w-1/4' alt="" />
                                 <p className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-200 mt-5">Looks Like you have not added anything to your cart. <br />Go Ahead And Enjoy Shopping</p>
@@ -69,7 +69,7 @@ function Cart() {
                                     </h2>
                                     <ul role="list" className="">
                                         {state.cartItems.map((product) => (
-                                            <CartItem product={product} key={product.productID} />
+                                            <CartItem product={product} key={product.itemID} />
                                         ))}
                                     </ul>
                                 </section>
@@ -105,7 +105,7 @@ function Cart() {
                                                         {
                                                             cartItems.map((item) => {
                                                                 return (
-                                                                    <tr key={item.productID}>
+                                                                    <tr key={item.itemID}>
                                                                         <td className='px-5 py-1 text-sm dark:text-black text-white font-semibold'>{item.productName}</td>
                                                                         <td className='px-5 py-1 text-sm dark:text-black text-white font-semibold'>x {item.productQuantity}</td>
                                                                         <td className='px-5 py-1 text-sm dark:text-black text-white font-bold text-right'>₹ {item.productPrice * item.productQuantity}</td>

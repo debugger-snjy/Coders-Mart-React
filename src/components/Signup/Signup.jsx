@@ -1,13 +1,79 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { isAnyFieldEmpty, isEmailValid, isValidName, isValidPassword, isValidPhoneNumber } from "../../utils/validations"
-import { createNewUser } from "../../api/user.service"
-
+import { createNewUserAPI } from "../../api/user.service"
+import { isUserLoggedIn } from "../../utils/tokenOperations.js"
 function Signup() {
 
+    const navigateTo = useNavigate();
+
+    useEffect(() => {
+        if (isUserLoggedIn()) {
+            toast('You Are Already Logged In !!')
+            navigateTo("/");
+        }
+    })
+    
     const signUpUser = async () => {
-        // Function to Call the Sign Up API 
+        let name = document.getElementById('name').value;
+        let email = document.getElementById('email').value;
+        let phone = document.getElementById('phone').value;
+        let password = document.getElementById('password').value;
+        let isGenderMale = document.getElementById('male').checked;
+        let isGenderFemale = document.getElementById('female').checked;
+        let isGenderOthers = document.getElementById('others').checked;
+        let gender = "";
+        if (isGenderMale) {
+            gender = "male"
+        };
+        if (isGenderFemale) {
+            gender = "female"
+        };
+        if (isGenderOthers) {
+            gender = "others"
+        };
+
+        let address = document.getElementById('address').value;
+
+        console.log(gender)
+
+        let emptyFieldValidations = isAnyFieldEmpty({ name, email, phone, password, gender });
+
+        if (emptyFieldValidations.isEmpty) {
+            toast.error(emptyFieldValidations.message)
+        }
+        if (!isEmailValid(email)) {
+            toast.error("Invalid Email Address")
+        }
+        if (!isValidPhoneNumber(phone)) {
+            toast.error("Invalid Phone Number")
+        }
+        if (!isValidPassword(password)) {
+            toast.error("Invalid Password")
+        }
+        if (!isValidName(name)) {
+            toast.error("Invalid Name")
+        }
+
+        const finalUserData = {
+            name,
+            email,
+            password,
+            phone,
+            gender,
+            address
+        }
+
+        // Calling the API Call From the Service
+        const apiResponse = await createNewUserAPI(finalUserData);
+
+        if (!apiResponse || !apiResponse?.success) {
+            toast.error(apiResponse?.message ?? "User Not Created")
+        }
+        else {
+            toast.success(apiResponse.message)
+        }
     }
 
     return (

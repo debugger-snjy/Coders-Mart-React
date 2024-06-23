@@ -1,14 +1,17 @@
 import { createContext, useReducer } from "react"
 import { toast } from 'react-hot-toast';
+import { fetchUser, isUserLoggedIn } from "../utils/tokenOperations";
+import { getCartItems } from "../api/cart.service"
 
 
 // Initial State for the Cart
 // No Need for the initialState, as we fetch the data frm the localStorage
 const initialState = {
+    user: null,
     totalCartItems: 0,
     cartItems: [
         // {
-        //     productID: 1,
+        //     itemID: 1,
         //     productName: "Nike Airmax Pro V2",
         //     productPrice: 20874.80,
         //     productDescription: "A chip (often just chip, or crisp in British and Irish English) may be a thin slice of potato that has been either deep fried or baked until crunchy. theyre commonly served as a snack, side dish, or appetizer.",
@@ -23,7 +26,7 @@ export const cartContext = createContext();
 
 // Function to store the data in the localStorage
 const storeInLocalStorage = (data) => {
-    localStorage.setItem("allCartItems", JSON.stringify(data))
+    localStorage.setItem("allcartItems", JSON.stringify(data))
 }
 
 // Creating the Cart Reducer Function
@@ -34,12 +37,12 @@ const cartReducer = (state, action) => {
         case "ADD_ITEM_IN_CART":
             console.log(action.payload.item)
             // Checking whether the item already exists in the cart or not
-            const isItemFoundInCart = state.cartItems.find((item) => item.productID === action.payload.item.productID)
+            const isItemFoundInCart = state.cartItems.find((item) => item.itemID === action.payload.item.itemID)
 
             // If item already in cart 
             if (isItemFoundInCart) {
                 // Then we have to increase the quantity by productQuantity only
-                // state.cartItems.map((item) => item.productID === action.payload.item.productID ? { ...item, productQuantity: item.productQuantity + action.payload.item.productQuantity } : item)
+                // state.cartItems.map((item) => item.itemID === action.payload.item.itemID ? { ...item, productQuantity: item.productQuantity + action.payload.item.productQuantity } : item)
                 // console.log("Demo Data : ", state.cartItems)
 
                 // Showing the success toast message
@@ -49,8 +52,10 @@ const cartReducer = (state, action) => {
                 let updatedState = {
                     ...state,
                     totalCartItems: state.totalCartItems + action.payload.item.productQuantity,
-                    cartItems: state.cartItems.map((item) => item.productID === action.payload.item.productID ? { ...item, productQuantity: item.productQuantity + action.payload.item.productQuantity } : item)
+                    cartItems: state.cartItems.map((item) => item.itemID === action.payload.item.itemID ? { ...item, productQuantity: item.productQuantity + action.payload.item.productQuantity } : item)
                 }
+
+                console.log("Check NULL : ", updatedState.totalCartItems)
 
 
                 // Storing the data in local host
@@ -75,6 +80,8 @@ const cartReducer = (state, action) => {
                     ]
                 }
 
+                console.log("Check NULL : ", updatedState.totalCartItems)
+
 
                 // Storing the data in local host
                 storeInLocalStorage(updatedState)
@@ -84,14 +91,19 @@ const cartReducer = (state, action) => {
 
         // Action to Remove item From the cart 
         case "REMOVE_ITEM_IN_CART":
-            const isDeletedItemExist = state.cartItems.find((item) => item.productID === action.payload.productID) ?? false
+            const isDeletedItemExist = state.cartItems.find((item) => item.itemID === action.payload.itemID) ?? false
+
+            console.log(action.payload.itemID);
+
             if (isDeletedItemExist) {
                 // Then we have to increase the quantity by 1 only
                 let updatedState = {
                     ...state,
                     totalCartItems: state.totalCartItems - isDeletedItemExist.productQuantity,
-                    cartItems: [...state.cartItems.filter((item) => item.productID !== action.payload.productID)]
+                    cartItems: [...state.cartItems.filter((item) => item.itemID !== action.payload.itemID)]
                 }
+
+                console.log("Check NULL : ", updatedState.totalCartItems)
 
                 // Showing the success toast message
                 toast.success("Successfully Removed from Cart 🛒")
@@ -116,14 +128,16 @@ const cartReducer = (state, action) => {
 
         case "INCREMENT_ITEM_IN_CART":
             // Checking whether the item already exists in the cart or not
-            const isIncrementedItemExist = state.cartItems.find((item) => item.productID === action.payload.productID) ?? false
+            const isIncrementedItemExist = state.cartItems.find((item) => item.itemID === action.payload.itemID) ?? false
             if (isIncrementedItemExist) {
                 // Then we have to increase the quantity by 1 only
                 let updatedState = {
                     ...state,
                     totalCartItems: state.totalCartItems + 1,
-                    cartItems: state.cartItems.map((item) => item.productID === action.payload.productID ? { ...item, productQuantity: item.productQuantity + 1 } : item)
+                    cartItems: state.cartItems.map((item) => item.itemID === action.payload.itemID ? { ...item, productQuantity: item.productQuantity + 1 } : item)
                 }
+
+                console.log("Check NULL : ", updatedState.totalCartItems)
 
                 // Storing the data in local host
                 storeInLocalStorage(updatedState)
@@ -144,14 +158,16 @@ const cartReducer = (state, action) => {
 
         case "DECREMENT_ITEM_IN_CART":
             // Checking whether the item already exists in the cart or not
-            const isDecrementedItemExist = state.cartItems.find((item) => item.productID === action.payload.productID) ?? false
+            const isDecrementedItemExist = state.cartItems.find((item) => item.itemID === action.payload.itemID) ?? false
             if (isDecrementedItemExist && isDecrementedItemExist.productQuantity >= 1) {
                 // Then we have to increase the quantity by 1 only
                 let updatedState = {
                     ...state,
                     totalCartItems: state.totalCartItems - 1,
-                    cartItems: state.cartItems.map((item) => item.productID === action.payload.productID ? { ...item, productQuantity: item.productQuantity - 1 } : item)
+                    cartItems: state.cartItems.map((item) => item.itemID === action.payload.itemID ? { ...item, productQuantity: item.productQuantity - 1 } : item)
                 }
+
+                console.log("Check NULL : ", updatedState.totalCartItems)
 
                 // Storing the data in local host
                 storeInLocalStorage(updatedState)
@@ -170,7 +186,16 @@ const cartReducer = (state, action) => {
                 return updatedState;
             }
 
+        case "LOGOUT":
+            return initialState
+
+        case "UPDATE_STATE":
+            let stateData = JSON.parse(localStorage.getItem("allcartItems"));
+            console.log("UPdated State : ", stateData)
+            return stateData;
+
         default:
+
             let updatedState = state;
 
             // Storing the data in local host
@@ -180,9 +205,29 @@ const cartReducer = (state, action) => {
     }
 }
 
+
 // Creating the Cart Provider to use the store data anywhere
 export const CartProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(cartReducer, JSON.parse(localStorage.getItem("allCartItems")) == null ? initialState : JSON.parse(localStorage.getItem("allCartItems")))
+
+    let stateData;
+    if (isUserLoggedIn()) {
+
+        let items = JSON.parse(localStorage.getItem("allcartItems"));
+
+        stateData = items;
+
+        console.log("Data Check : ", stateData)
+    }
+    else {
+        stateData = {
+            ...JSON.parse(localStorage.getItem("allcartItems")),
+            user: null
+        }
+    }
+
+    console.log("Data Check : ", stateData)
+
+    const [state, dispatch] = useReducer(cartReducer, stateData)
 
     return (
         <cartContext.Provider value={{ state, dispatch }}>

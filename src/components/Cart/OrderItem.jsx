@@ -3,7 +3,7 @@ import React from 'react'
 function OrderItem({ product }) {
 
     return (
-        <div key={product.productID} className="bg-gray-200 px-5 py-2 rounded-lg border-2 border-black hover:shadow-md hover:shadow-black dark:bg-gray-900 dark:border-white dark:hover:bg-gray-800 dark:hover:shadow-white">
+        <div key={product.itemID} className="bg-gray-200 px-5 py-2 rounded-lg border-2 border-black hover:shadow-md hover:shadow-black dark:bg-gray-900 dark:border-white dark:hover:bg-gray-800 dark:hover:shadow-white">
             <li className="flex py-2 sm:py-2 items-center">
                 <div className="flex-shrink-0">
                     <img

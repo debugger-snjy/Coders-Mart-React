@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { cartContext } from '../../context/cartContext';
 import { Minus, MinusCircleIcon, Plus, PlusCircleIcon } from 'lucide-react';
+import { addItemToCart, getCartItems } from "../../api/cart.service.js";
 
 function ProductItem({ product }) {
 
@@ -46,9 +47,10 @@ function ProductItem({ product }) {
                         type="button"
                         className="select-none rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:bg-white dark:text-black dark:hover:bg-white/80  dark:focus-visible:outline-white"
                         onClick={
-                            () => {
+                            async () => {
                                 console.log("Product : ", product);
                                 dispatch({ type: "ADD_ITEM_IN_CART", payload: { item: { ...product, productQuantity: qty } } })
+                                await addItemToCart(product._id,qty)
                                 setQty(1)
                             }
                         }

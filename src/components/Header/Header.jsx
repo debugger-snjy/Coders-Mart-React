@@ -1,8 +1,11 @@
-import React, { useContext } from 'react'
-import { cartContext } from "../../context/cartContext"
+import React, { useContext, useEffect, useState } from 'react'
 import { Menu, X, ChevronDown, ChevronRight, ShoppingCart, Sun, Moon } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import useTheme from "../../context/themeContext.js"
+import { fetchUser } from '../../utils/tokenOperations.js'
+import { logoutUserAPI } from "../../api/user.service.js"
+import toast from 'react-hot-toast'
+import { cartContext } from "../../context/cartContext.jsx"
 
 const menuItems = [
     {
@@ -20,11 +23,6 @@ const menuItems = [
 ]
 
 function Header() {
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false)
-
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen)
-    }
 
     // Getting the Theme Context Using the Custom Hook Created
     const { darkTheme, lightTheme, themeMode } = useTheme();
@@ -45,7 +43,30 @@ function Header() {
     }
 
     const { state } = useContext(cartContext)
+
+    useEffect(() => {
+
+    }, [state])
+
+    const navigateTo = useNavigate();
+    const { dispatch } = useContext(cartContext)
+
+    const logoutUser = async () => {
+
+        const logoutResponse = await logoutUserAPI();
+
+        if (logoutResponse.success) {
+            dispatch({ type: "LOGOUT" })
+            toast.success("You are Logged Out Successfully !!");
+            navigateTo("/")
+            state.totalCartItems = 0;
+        }
+    }
+
     const totalItems = state.totalCartItems
+    // const totalItems = JSON.parse(localStorage.getItem("cartItems")) ? JSON.parse(localStorage.getItem("cartItems"))?.cartItems.length  : 0;
+    console.log(totalItems);
+
 
     // Define button classes based on themeMode
     const buttonClasses = `relative inline-flex items-center cursor-pointer px-4 py-2 ${themeMode === 'dark' ? '#131921' : 'bg-gray-200'}`;
@@ -92,7 +113,7 @@ function Header() {
                         </Link>
                         <span
                             className="absolute rounded-full py-1 px-1 text-xs font-medium content-[''] leading-none grid place-items-center top-[1%] right-[1%] translate-x-1/4 -translate-y-1/4 bg-red-500 text-white min-w-[20px] min-h-[20px]">
-                            {totalItems}
+                            {JSON.parse(localStorage.getItem("allcartItems")) ? JSON.parse(localStorage.getItem("allcartItems")).cartItems.length : 0}
                         </span>
 
                     </div>
@@ -103,19 +124,30 @@ function Header() {
 
                 <div id="userDropdown" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                     <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                        <div>Guest User</div>
+                        <div>{JSON.parse(localStorage.getItem("user")) ? JSON.parse(localStorage.getItem("user")).name : "Guest User"}</div>
                     </div>
                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
-                        <li>
-                            <Link to={"/login"} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Login</Link>
-                        </li>
-                        <li>
-                            <Link to={"/signup"} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign Up</Link>
-                        </li>
+                        {!JSON.parse(localStorage.getItem("user")) &&
+                            <>
+                                <li>
+                                    <Link to={"/login"} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Login</Link>
+                                </li>
+                                <li>
+                                    <Link to={"/signup"} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign Up</Link>
+                                </li>
+                            </>
+                        }
+                        {JSON.parse(localStorage.getItem("user")) &&
+                            <>
+                                <li>
+                                    <Link to={"/cart"} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Cart</Link>
+                                </li>
+                            </>
+                        }
                     </ul>
-                    {/* {isCurrentUserLoggedIn = 0 && <div className="py-1">
-                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
-                    </div>} */}
+                    {JSON.parse(localStorage.getItem("user")) && <div className="py-1">
+                        <div onClick={logoutUser} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</div>
+                    </div>}
                 </div>
 
 
