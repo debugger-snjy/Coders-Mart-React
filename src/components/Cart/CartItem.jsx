@@ -10,7 +10,7 @@ function CartItem({ product }) {
     const { dispatch } = useContext(cartContext)
 
     return (
-        <div key={product.itemID} className="bg-gray-200 px-5 py-2 mb-5 rounded-lg border-2 border-black hover:shadow-md hover:shadow-black dark:bg-gray-900 dark:border-white dark:hover:bg-gray-800 dark:hover:shadow-white">
+        <div key={product._id} className="bg-gray-200 px-5 py-2 mb-5 rounded-lg border-2 border-black hover:shadow-md hover:shadow-black dark:bg-gray-900 dark:border-white dark:hover:bg-gray-800 dark:hover:shadow-white">
             <li className="flex py-2 sm:py-2 items-center">
                 <div className="flex-shrink-0">
                     <img
@@ -39,17 +39,17 @@ function CartItem({ product }) {
                             <p className="text-lg font-semibold select-none mt-2">
                                 {/* Calling the decrement action function to Reduce item by one */}
                                 {product.productQuantity == 1 ? < MinusCircleIcon size={20} className="text-gray-500 inline mr-1" /> : < MinusCircleIcon size={20} className="text-black dark:text-white inline mr-1" onClick={async () => {
-                                    dispatch({ type: "DECREMENT_ITEM_IN_CART", payload: { itemID: product.itemID } })
+                                    dispatch({ type: "DECREMENT_ITEM_IN_CART", payload: { _id: product._id } })
                                     if (isUserLoggedIn()) {
-                                        await updateQuantityInCartItem(product.itemID, 1, "remove")
+                                        await updateQuantityInCartItem(product._id, 1, "remove")
                                     }
                                 }} />}
                                 <span className='mx-2 text-bold text-lg'>{product.productQuantity}</span>
                                 {/* Calling the Increment action function to increase item by one */}
                                 <PlusCircleIcon size={20} className="text-black dark:text-white inline ml-1" onClick={async () => {
-                                    dispatch({ type: "INCREMENT_ITEM_IN_CART", payload: { itemID: product.itemID } })
+                                    dispatch({ type: "INCREMENT_ITEM_IN_CART", payload: { _id: product._id } })
                                     if (isUserLoggedIn()) {
-                                        await updateQuantityInCartItem(product.itemID, 1, "add")
+                                        await updateQuantityInCartItem(product._id, 1, "add")
                                     }
                                 }} />
                             </p>
@@ -60,9 +60,9 @@ function CartItem({ product }) {
 
                         {/* Calling the remove item from cart Action function In state */}
                         <button type="button" className="group flex items-center space-x-1 rounded-lg p-2 hover:bg-red-800" onClick={async () => {
-                            dispatch({ type: "REMOVE_ITEM_IN_CART", payload: { itemID: product.itemID } })
+                            dispatch({ type: "REMOVE_ITEM_IN_CART", payload: { _id: product._id } })
                             if (isUserLoggedIn()) {
-                                await removeItemFromCart(product.itemID)
+                                await removeItemFromCart(product._id)
                             }
                         }}>
                             <Trash size={20} strokeWidth={"3px"} className="text-red-900 dark:text-red-500 font-bold group-hover:text-red-200" />

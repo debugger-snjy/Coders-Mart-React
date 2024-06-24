@@ -66,7 +66,7 @@ const loginUserAPI = async (userLoginData) => {
             localStorage.setItem("user", JSON.stringify(responseData.data.user))
 
             // Adding the LocalStorage Items in Cart
-            const itemsInLocal = JSON.parse(localStorage.getItem("allcartItems")).cartItems;
+            const itemsInLocal = JSON.parse(localStorage.getItem("allcartItems")) ? JSON.parse(localStorage.getItem("allcartItems")).cartItems : [];
             console.log(itemsInLocal)
 
             if (itemsInLocal.length !== 0) {
@@ -84,17 +84,26 @@ const loginUserAPI = async (userLoginData) => {
 
             let allCartItems = {
                 user: responseData.data.user,
-                totalCartItems: allItemsInCartResponse.data.userCart.length === 0 ? 0 : allItemsInCartResponse.data.userCart[0].cartItems.length,
-                cartItems: allItemsInCartResponse.data.userCart.length === 0 ? [] : allItemsInCartResponse.data.userCart[0].cartItems.map((item) => {
-                    return {
-                        itemID: item._id,
-                        productName: item.itemName,
-                        productPrice: item.itemPrice,
-                        productDescription: item.itemDescription,
-                        productImage: item.itemImage,
-                        productQuantity: item.quantity,
-                    }
-                })
+                cartItems: [],
+                totalCartItems: 0
+            };
+
+            if (allItemsInCartResponse.data.userCart.length > 0) {
+                console.log("Cart Updated !!!");
+                allCartItems = {
+                    user: responseData.data.user,
+                    totalCartItems: allItemsInCartResponse.data.userCart.length === 0 ? 0 : allItemsInCartResponse.data.userCart[0].cartItems.reduce((prev, current) => prev + current.quantity, 0),
+                    cartItems: allItemsInCartResponse.data.userCart.length === 0 ? [] : allItemsInCartResponse.data.userCart[0].cartItems.map((item) => {
+                        return {
+                            _id: item.itemID,
+                            productName: item.itemName,
+                            productPrice: item.itemPrice,
+                            productDescription: item.itemDescription,
+                            productImage: item.itemImage,
+                            productQuantity: item.quantity,
+                        }
+                    })
+                }
             }
 
             localStorage.setItem("allcartItems", JSON.stringify(allCartItems))

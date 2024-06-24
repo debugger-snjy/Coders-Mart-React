@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import payByCash from "../../assets/payment-cash-method.png"
 import payByCheque from "../../assets/payment-cheque-method.png"
 import OrderItem from '../Cart/OrderItem'
@@ -8,13 +8,28 @@ import { isAnyFieldEmpty } from "../../utils/validations";
 import toast from 'react-hot-toast'
 import { placeOrderAPI } from "../../api/order.service.js"
 import { getCartItems } from '../../api/cart.service'
+import { useNavigate } from 'react-router-dom'
 
 function Checkout() {
 
     // Getting the card context. 
-    const { state } = useContext(cartContext)
+    const { state, dispatch } = useContext(cartContext)
 
-    const [userAddress, setUserAddress] = useState(JSON.parse(localStorage.getItem("user"))  ? JSON.parse(localStorage.getItem("user")).address : "")
+    const navigateTo = useNavigate();
+
+    if (state === null || !state) {
+        navigateTo("/")
+    }
+
+    useEffect(() => {
+
+        if (state.user === null) {
+            navigateTo("/")
+        }
+
+    }, [])
+
+    const [userAddress, setUserAddress] = useState(JSON.parse(localStorage.getItem("user")) ? JSON.parse(localStorage.getItem("user")).address : "")
 
     const placeOrder = async () => {
         const paymentMethodByCheque = document.getElementById("radio_1").checked;
@@ -38,31 +53,51 @@ function Checkout() {
 
         const addOrderResponse = await placeOrderAPI(paymentMethod, address);
 
-        
+
         if (addOrderResponse.success) {
-            
+
             toast.success(addOrderResponse.message)
 
-            const allItemsInCartResponse = await getCartItems();
+            localStorage.removeItem("allcartItems");
 
-            console.log(allItemsInCartResponse.data.userCart)
+            try {
+                const allItemsInCartResponse = await getCartItems();
 
-            let allCartItems = {
-                user: JSON.parse(localStorage.getItem("user")),
-                totalCartItems: allItemsInCartResponse.data.userCart[0].cartItems.length,
-                cartItems: allItemsInCartResponse.data.userCart[0].cartItems.map((item) => {
-                    return {
-                        itemID: item._id,
-                        productName: item.itemName,
-                        productPrice: item.itemPrice,
-                        productDescription: item.itemDescription,
-                        productImage: item.itemImage,
-                        productQuantity: item.quantity,
+                console.log(allItemsInCartResponse.data)
+
+                let allCartItems = {
+                    user: JSON.parse(localStorage.getItem("user")),
+                    cartItems: [],
+                    totalCartItems: 0
+                };
+
+                if (allItemsInCartResponse.data.userCart.length > 0) {
+                    console.log("Cart Updated !!!");
+                    allCartItems = {
+                        user: JSON.parse(localStorage.getItem("user")),
+                        totalCartItems: allItemsInCartResponse.data.userCart.length === 0 ? 0 : allItemsInCartResponse.data.userCart[0].cartItems.reduce((prev, current) => prev + current.quantity, 0),
+                        cartItems: allItemsInCartResponse.data.userCart.length === 0 ? [] : allItemsInCartResponse.data.userCart[0].cartItems.map((item) => {
+                            return {
+                                _id: item.itemID,
+                                productName: item.itemName,
+                                productPrice: item.itemPrice,
+                                productDescription: item.itemDescription,
+                                productImage: item.itemImage,
+                                productQuantity: item.quantity,
+                            }
+                        })
                     }
-                })
-            }
+                }
 
-            localStorage.setItem("allcartItems", JSON.stringify(allCartItems))
+                localStorage.setItem("allcartItems", JSON.stringify(allCartItems))
+
+                // Updating the State
+                dispatch({ type: "UPDATE_STATE" })
+
+                navigateTo("/")
+            } catch (error) {
+                console.log("[src/components/Checkout/Checkout.jsx] Error : ", error.message)
+            }
 
         }
         else {
@@ -72,7 +107,7 @@ function Checkout() {
     }
 
     // to get data from state
-    const { cartItems, totalCartItems } = state;
+    let { cartItems, totalCartItems } = state;
 
     // Calculating the Total Bill using Memo Hook
     const totalBill = useMemo(() => {
@@ -137,7 +172,7 @@ function Checkout() {
                         </div>
                         <div className="mt-6 flex items-center justify-between">
                             <p className="text-xl font-semibold text-gray-900 dark:text-white">Total</p>
-                            <p className="text-xl font-semibold text-gray-900 dark:text-white">${totalBill + 1000}</p>
+                            <p className="text-xl font-semibold text-gray-900 dark:text-white">₹ {totalBill + 1000}</p>
                         </div>
                     </div>
                     <div className="text-center">

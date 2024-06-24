@@ -27,7 +27,7 @@ function ProductItem({ product }) {
                 <div className="w-full flex flex-row justify-between">
                     <div className="flex flex-col">
                         <h2 className="text-lg font-semibold">{product.productName}</h2>
-                        <p className="text-lg font-semibold m-0">${product.productPrice}</p>
+                        <p className="text-lg font-semibold m-0">₹{product.productPrice}</p>
                     </div>
                     <div>
                         <div className='text-lg font-medium'>Quantity</div>
@@ -42,7 +42,7 @@ function ProductItem({ product }) {
                     </div>
                 </div>
                 <div className="flex flex-col space-y-2">
-                    
+
                     {/* Button to add the item in the card */}
                     <button
                         type="button"
@@ -51,7 +51,7 @@ function ProductItem({ product }) {
                             async () => {
                                 console.log("Product : ", product);
                                 dispatch({ type: "ADD_ITEM_IN_CART", payload: { item: { ...product, productQuantity: qty } } })
-                                if(isUserLoggedIn()){
+                                if (isUserLoggedIn()) {
                                     await addItemToCart(product._id, qty)
                                 }
                                 setQty(1)

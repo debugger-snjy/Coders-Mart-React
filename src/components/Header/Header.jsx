@@ -93,8 +93,14 @@ function Header() {
                 <span className={`font-bold ${themeMode === "dark" ? "text-white" : "text-black"}`}>Coder's Mart</span>
             </Link>
 
+
             <div className="ml-1 mt-1 flex grow justify-end items-center">
-                <div className='mx-8 relative'>
+                <Link className='text-black dark:text-white mx-2' to="/">Home</Link>
+                {JSON.parse(localStorage.getItem("user")) && <Link className='text-black dark:text-white mx-2' to="/signup">Signup</Link>}
+                {!JSON.parse(localStorage.getItem("user")) && <Link className='text-black dark:text-white mx-2' to="/login">Login</Link>}
+                {!JSON.parse(localStorage.getItem("user")) && <Link className='text-black dark:text-white mx-2' to="/signup">Signup</Link>}
+
+                <div className='mx-3 mr-8 relative'>
                     <div className="relative inline-flex">
 
                         {/* Theme Switcher */}
@@ -113,7 +119,8 @@ function Header() {
                         </Link>
                         <span
                             className="absolute rounded-full py-1 px-1 text-xs font-medium content-[''] leading-none grid place-items-center top-[1%] right-[1%] translate-x-1/4 -translate-y-1/4 bg-red-500 text-white min-w-[20px] min-h-[20px]">
-                            {JSON.parse(localStorage.getItem("allcartItems")) ? JSON.parse(localStorage.getItem("allcartItems")).cartItems.length : 0}
+                            {/* {JSON.parse(localStorage.getItem("allcartItems")) ? JSON.parse(localStorage.getItem("allcartItems")).cartItems.length : 0} */}
+                            {state.totalCartItems}
                         </span>
 
                     </div>

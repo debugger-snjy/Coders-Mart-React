@@ -51,6 +51,8 @@ function Login() {
             // Updating the State
             dispatch({ type: "UPDATE_STATE" })
 
+            console.log("Updated State :",state)
+
             // Navigating the User
             navigateTo("/")
         }

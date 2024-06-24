@@ -21,7 +21,7 @@ const router = createBrowserRouter(
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={isUserLoggedIn() ? <Checkout /> : <Login />} />
+            <Route path="/checkout" element={<Checkout />} />
         </Route>
     )
 )
