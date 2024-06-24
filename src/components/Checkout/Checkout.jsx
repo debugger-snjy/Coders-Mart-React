@@ -14,7 +14,7 @@ function Checkout() {
     // Getting the card context. 
     const { state } = useContext(cartContext)
 
-    const [userAddress, setUserAddress] = useState(JSON.parse(localStorage.getItem("user")).address ?? "")
+    const [userAddress, setUserAddress] = useState(JSON.parse(localStorage.getItem("user"))  ? JSON.parse(localStorage.getItem("user")).address : "")
 
     const placeOrder = async () => {
         const paymentMethodByCheque = document.getElementById("radio_1").checked;

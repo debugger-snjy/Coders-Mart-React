@@ -1,6 +1,6 @@
 import axios from "axios";
 import { fetchToken, fetchUser } from "../utils/tokenOperations";
-import { getCartItems } from "./cart.service";
+import { addItemToCart, getCartItems } from "./cart.service";
 
 const server = 'http://localhost:8000/v1/api';
 
@@ -64,6 +64,19 @@ const loginUserAPI = async (userLoginData) => {
 
             // Saving the User Data in the SessionStorage
             localStorage.setItem("user", JSON.stringify(responseData.data.user))
+
+            // Adding the LocalStorage Items in Cart
+            const itemsInLocal = JSON.parse(localStorage.getItem("allcartItems")).cartItems;
+            console.log(itemsInLocal)
+
+            if (itemsInLocal.length !== 0) {
+                await itemsInLocal.map(async (item) => {
+                    const response = await addItemToCart(item._id, item.productQuantity);
+                    console.log("Saved : ", response.data)
+                })
+            }
+
+            console.log("All Saved!!s")
 
             const allItemsInCartResponse = await getCartItems();
 

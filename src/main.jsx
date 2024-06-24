@@ -11,6 +11,7 @@ import { Toaster } from 'react-hot-toast'
 import Checkout from './components/Checkout/Checkout.jsx'
 import Login from './components/Login/Login.jsx'
 import Signup from './components/Signup/Signup.jsx'
+import { isUserLoggedIn } from './utils/tokenOperations.js'
 
 // Created router and all its path 
 const router = createBrowserRouter(
@@ -20,7 +21,7 @@ const router = createBrowserRouter(
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/checkout" element={isUserLoggedIn() ? <Checkout /> : <Login />} />
         </Route>
     )
 )

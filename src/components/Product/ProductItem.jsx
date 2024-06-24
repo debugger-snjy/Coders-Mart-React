@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { cartContext } from '../../context/cartContext';
 import { Minus, MinusCircleIcon, Plus, PlusCircleIcon } from 'lucide-react';
 import { addItemToCart, getCartItems } from "../../api/cart.service.js";
+import { isUserLoggedIn } from '../../utils/tokenOperations.js';
 
 function ProductItem({ product }) {
 
@@ -50,7 +51,9 @@ function ProductItem({ product }) {
                             async () => {
                                 console.log("Product : ", product);
                                 dispatch({ type: "ADD_ITEM_IN_CART", payload: { item: { ...product, productQuantity: qty } } })
-                                await addItemToCart(product._id,qty)
+                                if(isUserLoggedIn()){
+                                    await addItemToCart(product._id, qty)
+                                }
                                 setQty(1)
                             }
                         }

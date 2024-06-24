@@ -36,8 +36,16 @@ const cartReducer = (state, action) => {
         // Action to Add item in cart
         case "ADD_ITEM_IN_CART":
             console.log(action.payload.item)
-            // Checking whether the item already exists in the cart or not
-            const isItemFoundInCart = state.cartItems.find((item) => item.itemID === action.payload.item.itemID)
+            console.log(state)
+
+            let isItemFoundInCart = false;
+
+            if (state.cartItems > 0) {
+                // Checking whether the item already exists in the cart or not
+                isItemFoundInCart = state.cartItems.find((item) => item.itemID === action.payload.item.itemID)
+
+                console.log(isItemFoundInCart);
+            }
 
             // If item already in cart 
             if (isItemFoundInCart) {
@@ -47,6 +55,7 @@ const cartReducer = (state, action) => {
 
                 // Showing the success toast message
                 toast.success(action.payload.item.productName + " Added to Cart 🛒")
+                console.log(action.payload.item.productQuantity)
 
                 // Getting updated state
                 let updatedState = {
@@ -58,8 +67,10 @@ const cartReducer = (state, action) => {
                 console.log("Check NULL : ", updatedState.totalCartItems)
 
 
-                // Storing the data in local host
-                storeInLocalStorage(updatedState)
+                if (!isUserLoggedIn()) {
+                    // Storing the data in local host
+                    storeInLocalStorage(updatedState)
+                }
 
                 return updatedState;
             }
@@ -71,20 +82,37 @@ const cartReducer = (state, action) => {
                 toast.success(action.payload.item.productName + " Added to Cart 🛒")
 
                 // Getting updated state
-                let updatedState = {
-                    ...state,
-                    totalCartItems: state.totalCartItems + action.payload.item.productQuantity,
-                    cartItems: [
-                        ...state.cartItems,
-                        { ...action.payload.item }
-                    ]
+                let updatedState;
+
+                console.log("Hello : ", state.cartItems)
+
+                if (state.cartItems) {
+                    updatedState = {
+                        ...state,
+                        totalCartItems: state.totalCartItems + action.payload.item.productQuantity,
+                        cartItems: [
+                            ...state.cartItems,
+                            { ...action.payload.item }
+                        ]
+                    }
+                }
+                else {
+                    updatedState = {
+                        ...state,
+                        totalCartItems: state.totalCartItems + action.payload.item.productQuantity,
+                        cartItems: [
+                            { ...action.payload.item }
+                        ]
+                    }
                 }
 
                 console.log("Check NULL : ", updatedState.totalCartItems)
 
 
-                // Storing the data in local host
-                storeInLocalStorage(updatedState)
+                if (!isUserLoggedIn()) {
+                    // Storing the data in local host
+                    storeInLocalStorage(updatedState)
+                }
 
                 return updatedState;
             }
@@ -108,8 +136,10 @@ const cartReducer = (state, action) => {
                 // Showing the success toast message
                 toast.success("Successfully Removed from Cart 🛒")
 
-                // Storing the data in local host
-                storeInLocalStorage(updatedState)
+                if (!isUserLoggedIn()) {
+                    // Storing the data in local host
+                    storeInLocalStorage(updatedState)
+                }
 
                 return updatedState;
 
@@ -120,8 +150,10 @@ const cartReducer = (state, action) => {
 
                 let updatedState = state;
 
-                // Storing the data in local host
-                storeInLocalStorage(updatedState)
+                if (!isUserLoggedIn()) {
+                    // Storing the data in local host
+                    storeInLocalStorage(updatedState)
+                }
 
                 return updatedState;
             }
@@ -139,8 +171,10 @@ const cartReducer = (state, action) => {
 
                 console.log("Check NULL : ", updatedState.totalCartItems)
 
-                // Storing the data in local host
-                storeInLocalStorage(updatedState)
+                if (!isUserLoggedIn()) {
+                    // Storing the data in local host
+                    storeInLocalStorage(updatedState)
+                }
 
                 return updatedState;
             }
@@ -150,8 +184,10 @@ const cartReducer = (state, action) => {
 
                 let updatedState = state;
 
-                // Storing the data in local host
-                storeInLocalStorage(updatedState)
+                if (!isUserLoggedIn()) {
+                    // Storing the data in local host
+                    storeInLocalStorage(updatedState)
+                }
 
                 return updatedState;
             }
@@ -169,8 +205,10 @@ const cartReducer = (state, action) => {
 
                 console.log("Check NULL : ", updatedState.totalCartItems)
 
-                // Storing the data in local host
-                storeInLocalStorage(updatedState)
+                if (!isUserLoggedIn()) {
+                    // Storing the data in local host
+                    storeInLocalStorage(updatedState)
+                }
 
                 return updatedState;
             }
@@ -180,8 +218,10 @@ const cartReducer = (state, action) => {
 
                 let updatedState = state;
 
-                // Storing the data in local host
-                storeInLocalStorage(updatedState)
+                if (!isUserLoggedIn()) {
+                    // Storing the data in local host
+                    storeInLocalStorage(updatedState)
+                }
 
                 return updatedState;
             }
@@ -221,7 +261,8 @@ export const CartProvider = ({ children }) => {
     else {
         stateData = {
             ...JSON.parse(localStorage.getItem("allcartItems")),
-            user: null
+            user: null,
+            totalCartItems: 0
         }
     }
 
