@@ -43,7 +43,28 @@ const addProductsAPI = async () => {
     }
 }
 
+const fetchProductAPI = async (id) => {
+    const url = `${server}/products/${id}`;
+
+    try {
+        const response = await axios.get(url, {}, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const productData = response.data;
+        console.log(productData)
+
+        return productData;
+    } catch (error) {
+        console.error('Error creating user:', error);
+        return null;
+    }
+}
+
 export {
     fetchAllProductsAPI,
-    addProductsAPI
+    addProductsAPI,
+    fetchProductAPI
 }

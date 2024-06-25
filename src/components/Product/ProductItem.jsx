@@ -3,6 +3,7 @@ import { cartContext } from '../../context/cartContext';
 import { Minus, MinusCircleIcon, Plus, PlusCircleIcon } from 'lucide-react';
 import { addItemToCart, getCartItems } from "../../api/cart.service.js";
 import { isUserLoggedIn } from '../../utils/tokenOperations.js';
+import { Link } from 'react-router-dom';
 
 function ProductItem({ product }) {
 
@@ -18,11 +19,13 @@ function ProductItem({ product }) {
         <div className="p-4 rounded-lg border-gray-500 border-2 hover:shadow-gray-600 bg-gray-300 hover:border-3 dark:bg-gray-900 dark:text-white dark:hover:shadow-gray-400 dark:hover:border-white dark:hover:border-3">
             <div className="flex flex-col space-y-4">
                 <div className="overflow-hidden rounded-md">
-                    <img
-                        alt="Product gallery 1"
-                        src={`${product.productImage}`}
-                        className="w-full h-48 object-cover"
-                    />
+                    <Link to={`/product/${product._id}`}>
+                        <img
+                            alt="Product gallery 1"
+                            src={`${product.productImage}`}
+                            className="w-full h-48 object-cover"
+                        />
+                    </Link>
                 </div>
                 <div className="w-full flex flex-row justify-between">
                     <div className="flex flex-col">
