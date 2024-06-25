@@ -117,7 +117,7 @@ function Checkout() {
 
     return (
         <>
-            <div className="grid space-x-3 sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32 py-10 dark:bg-[#252d37] dark:text-white">
+            <div className="grid space-x-3 sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32 py-10 dark:bg-[#252d37] dark:text-white" style={{height:"90vh"}}>
                 <div className="px-4 pt-8">
                     <p className="text-black dark:text-white text-xl font-medium">Order Summary</p>
                     <p className="text-gray-400 dark:text-gray-300">Check your items. And select a suitable shipping method.</p>

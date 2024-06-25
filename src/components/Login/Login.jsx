@@ -51,15 +51,13 @@ function Login() {
             // Updating the State
             dispatch({ type: "UPDATE_STATE" })
 
-            console.log("Updated State :",state)
-
             // Navigating the User
             navigateTo("/")
         }
     }
 
     return (
-        <div className="bg-white dark:bg-[#252d37] py-10" style={{ height: "85vh" }}>
+        <div className="bg-white dark:bg-[#252d37] py-10" style={{ height: "90vh" }}>
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
                 <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">

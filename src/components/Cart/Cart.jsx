@@ -28,7 +28,7 @@ function Cart() {
 
     // returning the JSX
     return (
-        <div className="dark:bg-[#252d37] dark:text-white" style={totalCartItems == 0 ? { height: "90vh" } : {}}>
+        <div className="dark:bg-[#252d37] dark:text-white" style={{ height: "90vh" }}>
             <div className="mx-auto max-w-7xl px-2 lg:px-0 ">
                 <div className="mx-auto max-w-2xl py-8 lg:max-w-7xl">
                     <div className="flex justify-between">

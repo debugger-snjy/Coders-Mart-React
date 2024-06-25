@@ -96,7 +96,8 @@ function Header() {
 
             <div className="ml-1 mt-1 flex grow justify-end items-center">
                 <Link className='text-black dark:text-white mx-2' to="/">Home</Link>
-                {JSON.parse(localStorage.getItem("user")) && <Link className='text-black dark:text-white mx-2' to="/signup">Signup</Link>}
+                {JSON.parse(localStorage.getItem("user")) && <Link className='text-black dark:text-white mx-2 cursor-pointer' to="/cart">Cart</Link>}
+                {JSON.parse(localStorage.getItem("user")) && <Link className='text-black dark:text-white mx-2 cursor-pointer' onClick={logoutUser}>Signout</Link>}
                 {!JSON.parse(localStorage.getItem("user")) && <Link className='text-black dark:text-white mx-2' to="/login">Login</Link>}
                 {!JSON.parse(localStorage.getItem("user")) && <Link className='text-black dark:text-white mx-2' to="/signup">Signup</Link>}
 
