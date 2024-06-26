@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Menu, X, ChevronDown, ChevronRight, ShoppingCart, Sun, Moon } from 'lucide-react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import useTheme from "../../context/themeContext.js"
-import { fetchUser } from '../../utils/tokenOperations.js'
+import { fetchUser, isUserLoggedIn } from '../../utils/tokenOperations.js'
 import { logoutUserAPI } from "../../api/user.service.js"
 import toast from 'react-hot-toast'
 import { cartContext } from "../../context/cartContext.jsx"
@@ -98,11 +98,11 @@ function Header() {
                 <NavLink className={({ isActive }) => isActive ? "text-black dark:text-white mx-2 cursor-pointer font-bold" : "text-black dark:text-white mx-2 cursor-pointer"} to="/">Home</NavLink>
                 {JSON.parse(localStorage.getItem("user")) && <NavLink className={({ isActive }) => isActive ? "text-black dark:text-white mx-2 cursor-pointer font-bold" : "text-black dark:text-white mx-2 cursor-pointer"} to="/cart">Cart</NavLink>}
                 {JSON.parse(localStorage.getItem("user")) && <NavLink className={({ isActive }) => isActive ? "text-black dark:text-white mx-2 cursor-pointer font-bold" : "text-black dark:text-white mx-2 cursor-pointer"} to="/orders" >Orders</NavLink>}
-                {JSON.parse(localStorage.getItem("user")) && <Link className='text-black dark:text-white mx-2 cursor-pointer' onClick={logoutUser}>Signout</Link>}
+                {JSON.parse(localStorage.getItem("user")) && <Link className='text-black dark:text-white mx-2 cursor-pointer' onClick={logoutUser}>Logout</Link>}
                 {!JSON.parse(localStorage.getItem("user")) && <NavLink className={({ isActive }) => isActive ? "text-black dark:text-white mx-2 cursor-pointer font-bold" : "text-black dark:text-white mx-2 cursor-pointer"} to="/login" >Login</NavLink>}
                 {!JSON.parse(localStorage.getItem("user")) && <NavLink className={({ isActive }) => isActive ? "text-black dark:text-white mx-2 cursor-pointer font-bold" : "text-black dark:text-white mx-2 cursor-pointer"} to="/signup" >Signup</NavLink>}
 
-                <div className='mx-0 mr-8 relative'>
+                <div className={`mx-0 ${isUserLoggedIn() ? 'mr-8' : ''} relative`}>
                     <div className="relative inline-flex">
 
                         {/* Theme Switcher */}
@@ -121,44 +121,50 @@ function Header() {
                         </Link>
                         <span
                             className="absolute rounded-full py-1 px-1 text-xs font-medium content-[''] leading-none grid place-items-center top-[1%] right-[1%] translate-x-1/4 -translate-y-1/4 bg-red-500 text-white min-w-[20px] min-h-[20px]">
-                            {/* {JSON.parse(localStorage.getItem("allcartItems")) ? JSON.parse(localStorage.getItem("allcartItems")).cartItems.length : 0} */}
-                            {state.totalCartItems}
+                            {JSON.parse(localStorage.getItem("allcartItems")) ? JSON.parse(localStorage.getItem("allcartItems")).cartItems.length : 0}
                         </span>
 
                     </div>
 
                 </div>
 
-                <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" className="w-10 h-10 rounded-full cursor-pointer" src="https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png" alt="User dropdown" />
+                {
+                    isUserLoggedIn() &&
+                    <>
+                        <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" className="w-10 h-10 rounded-full cursor-pointer" src="https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png" alt="User dropdown" />
 
-                <div id="userDropdown" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                    <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                        <div>{JSON.parse(localStorage.getItem("user")) ? JSON.parse(localStorage.getItem("user")).name : "Guest User"}</div>
-                    </div>
-                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
-                        {!JSON.parse(localStorage.getItem("user")) &&
-                            <>
-                                <li>
-                                    <Link to={"/login"} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Login</Link>
-                                </li>
-                                <li>
-                                    <Link to={"/signup"} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign Up</Link>
-                                </li>
-                            </>
-                        }
-                        {JSON.parse(localStorage.getItem("user")) &&
-                            <>
-                                <li>
-                                    <Link to={"/cart"} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Cart</Link>
-                                </li>
-                            </>
-                        }
-                    </ul>
-                    {JSON.parse(localStorage.getItem("user")) && <div className="py-1">
-                        <div onClick={logoutUser} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</div>
-                    </div>}
-                </div>
+                        <div id="userDropdown" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                            <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                                <div>{JSON.parse(localStorage.getItem("user")) ? JSON.parse(localStorage.getItem("user")).name : "Guest User"}</div>
+                            </div>
+                            <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
+                                {!JSON.parse(localStorage.getItem("user")) &&
+                                    <>
+                                        <li>
+                                            <Link to={"/login"} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Login</Link>
+                                        </li>
+                                        <li>
+                                            <Link to={"/signup"} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign Up</Link>
+                                        </li>
+                                    </>
+                                }
+                                {JSON.parse(localStorage.getItem("user")) &&
+                                    <>
+                                        <li>
+                                            <Link to={"/cart"} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Cart</Link>
+                                        </li>
+                                        <li>
+                                            <Link to={"/order"} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Orders</Link>
+                                        </li>
+                                    </>
+                                }
+                            </ul>
+                            {JSON.parse(localStorage.getItem("user")) && <div className="py-1">
+                                <div onClick={logoutUser} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Logout</div>
+                            </div>}
+                        </div></>
 
+                }
 
             </div>
 

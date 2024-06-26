@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 const server = 'http://localhost:8000/v1/api';
 
-const addItemToCart = async (productID, quantity) => {
+const addItemToCart = async (productID, quantity, showMsg) => {
     try {
         const response = await axios.post(`${server}/cart/`, {
             productID,
@@ -17,7 +17,9 @@ const addItemToCart = async (productID, quantity) => {
         });
 
         if (response.status === 200) {
-            toast.success(response.data.message);
+            if (showMsg) {
+                toast.success(response.data.message);
+            }
             return response.data;
         } else {
             throw new Error(`Error adding item to cart: ${response.data.message}`);

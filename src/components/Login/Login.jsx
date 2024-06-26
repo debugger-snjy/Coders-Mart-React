@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, redirect, useNavigate } from 'react-router-dom'
 import { loginUserAPI } from "../../api/user.service.js"
 import { isAnyFieldEmpty, isEmailValid } from "../../utils/validations.js"
@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux'
 function Login() {
 
     const { dispatch } = useContext(cartContext)
+    const [emailInvalid, setEmailInvalid] = useState(null)
 
     const navigateTo = useNavigate();
 
@@ -20,6 +21,19 @@ function Login() {
         }
     })
 
+    const checkInputs = (e) => {
+        console.log(e)
+        if (e.target.name === "email") {
+            if (!isEmailValid(e.target.value)) {
+                setEmailInvalid(true);
+            }
+            else {
+                setEmailInvalid(false)
+                console.log("Deon")
+            }
+        }
+    }
+
     const loginUser = async () => {
 
         let email = document.getElementById('email').value;
@@ -28,10 +42,10 @@ function Login() {
         let emptyFieldValidations = isAnyFieldEmpty({ email, password });
 
         if (emptyFieldValidations.isEmpty) {
-            toast.error(emptyFieldValidations.message)
+            return toast.error(emptyFieldValidations.message)
         }
         if (!isEmailValid(email)) {
-            toast.error("Invalid Email Address")
+            return toast.error("Invalid Email Address")
         }
 
         const finalUserLoginData = {
@@ -43,7 +57,7 @@ function Login() {
         const apiResponse = await loginUserAPI(finalUserLoginData);
 
         if (!apiResponse || !apiResponse?.success) {
-            toast.error(apiResponse?.message ?? "User Not Found")
+            return toast.error(apiResponse?.message ?? "User Not Found")
         }
         else {
             toast.success(apiResponse.message)
@@ -67,7 +81,7 @@ function Login() {
                         <form className="space-y-4 md:space-y-6" action="#">
                             <div>
                                 <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email <span className="text-red-700">*</span></label>
-                                <input type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required />
+                                <input type="email" onInput={(e) => checkInputs(e)} name="email" id="email" className={`bg-gray-50 border ${emailInvalid === true ? 'border-[3px] dark:border-red-300 border-red-500' : emailInvalid === false ? 'border-[3px] dark:border-green-400 border-green-500 ' : ''} border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`} placeholder="name@company.com" required />
                             </div>
                             <div>
                                 <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password <span className="text-red-700">*</span></label>

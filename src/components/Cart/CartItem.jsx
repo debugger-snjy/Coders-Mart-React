@@ -3,6 +3,7 @@ import { MinusCircleIcon, PlusCircleIcon, Trash } from 'lucide-react'
 import { cartContext } from '../../context/cartContext'
 import { removeItemFromCart, updateQuantityInCartItem } from '../../api/cart.service'
 import { isUserLoggedIn } from '../../utils/tokenOperations'
+import { Link } from 'react-router-dom'
 
 function CartItem({ product }) {
 
@@ -13,12 +14,13 @@ function CartItem({ product }) {
         <div key={product._id} className="bg-gray-200 px-5 py-2 mb-5 rounded-lg border-2 border-black hover:shadow-md hover:shadow-black dark:bg-gray-900 dark:border-white dark:hover:bg-gray-800 dark:hover:shadow-white">
             <li className="flex py-2 sm:py-2 items-center">
                 <div className="flex-shrink-0">
-                    <img
-                        src={product.productImage}
-                        alt={product.productName}
-                        width={"200px"}
-                        className="rounded-md object-contain object-center shadow-xl border-4 border-black/60"
-                    />
+                    <Link to={`/product/${product._id}`}>
+                        <img
+                            src={product.productImage}
+                            alt={product.productName}
+                            width={"200px"}
+                            className="rounded-md object-contain object-center shadow-xl border-4 border-black/60"
+                        /></Link>
                 </div>
 
                 <div className="ml-4 flex flex-1 flex-row items-center justify-between sm:ml-6">
@@ -26,9 +28,9 @@ function CartItem({ product }) {
                         <div>
                             <div className="flex justify-between">
                                 <h3 className="text-lg ">
-                                    <a href={product.href} className="font-bold text-black dark:text-white">
+                                    <Link to={`/product/${product._id}`} className="font-bold text-black dark:text-white">
                                         {product.productName}
-                                    </a>
+                                    </Link>
                                 </h3>
                             </div>
                             <div className="mt-1 flex items-end">

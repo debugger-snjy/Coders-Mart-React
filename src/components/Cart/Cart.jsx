@@ -28,7 +28,7 @@ function Cart() {
 
     // returning the JSX
     return (
-        <div className="px-10 dark:bg-[#252d37] dark:text-white" style={totalCartItems < 4 ? { height: "100vh" } : {}}>
+        <div className={`px-10 dark:bg-[#252d37] dark:text-white lg:${totalCartItems < 4 ? { height: "100vh" } : {}} sm:h-screen xs:h-screen`}>
             <div className="mx-auto max-w-7xl px-2 lg:px-0 ">
                 <div className="mx-auto max-w-2xl py-8 lg:max-w-7xl">
                     <div className="flex justify-between">
@@ -109,12 +109,13 @@ function Cart() {
                                                 </table>
                                             }
 
-                                            <div className="flex items-center justify-between pt-4">
+                                            {/* TODO : Add Discount Functionality */}
+                                            {/* <div className="flex items-center justify-between pt-4">
                                                 <dt className="flex text-md text-black dark:text-white font-bold">
                                                     <span>Discount (10%)</span>
                                                 </dt>
-                                                <dd className="text-md font-bold dark:text-green-400 text-green-900">- ₹ {(totalBill * 10) / 100}</dd>
-                                            </div>
+                                                <dd className="text-md font-bold dark:text-green-400 text-green-900">- ₹ {((totalBill * 10) / 100).toFixed(2)}</dd>
+                                            </div> */}
                                             <div className="flex items-center justify-between py-4">
                                                 <dt className="flex text-md text-black dark:text-white font-bold">
                                                     <span>Delivery Charges</span>
@@ -123,8 +124,11 @@ function Cart() {
                                             </div>
                                             <div className="flex items-center justify-between  border-black dark:border-white border-y-[5px] border-dashed py-4 ">
                                                 <dt className="text-base font-black tracking-wide text-black/90 dark:text-white/90">Total Amount</dt>
+                                                
+                                                {/* TODO : Add Discount Functionality */}
                                                 {/* Showing the total bill after removing the discount */}
-                                                <dd className="text-base font-black tracking-wide text-black/90 dark:text-white/90">₹ {Math.round((totalBill - ((totalBill * 10) / 100)) * 1000) / 1000}</dd>
+                                                {/* <dd className="text-base font-black tracking-wide text-black/90 dark:text-white/90">₹ {((totalBill - ((totalBill * 10) / 100))).toFixed(2)}</dd> */}
+                                                <dd className="text-base font-black tracking-wide text-black/90 dark:text-white/90">₹ {totalBill.toFixed(2)}</dd>
                                             </div>
                                         </dl>
                                         <div className="px-2 pb-4 font-bold dark:text-green-400 text-green-800">

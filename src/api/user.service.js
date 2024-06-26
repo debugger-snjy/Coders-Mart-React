@@ -30,7 +30,7 @@ const createNewUserAPI = async (userData) => {
         return response.data;
     } catch (error) {
         console.error('Error creating user:', error);
-        return null;
+        return error?.response?.data;
     }
 }
 
@@ -71,7 +71,7 @@ const loginUserAPI = async (userLoginData) => {
 
             if (itemsInLocal.length !== 0) {
                 await itemsInLocal.map(async (item) => {
-                    const response = await addItemToCart(item._id, item.productQuantity);
+                    const response = await addItemToCart(item._id, item.productQuantity,false);
                     console.log("Saved : ", response.data)
                 })
             }
@@ -113,7 +113,7 @@ const loginUserAPI = async (userLoginData) => {
         return responseData;
     } catch (error) {
         console.error('Error creating user:', error);
-        return null;
+        return error?.response?.data;
     }
 }
 

@@ -15,6 +15,9 @@ function ProductDetails() {
 
     const [product, setProduct] = useState();
 
+    // to get data from state
+    const { cartItems, totalCartItems } = state;
+
     const { id } = useParams();
 
     useEffect(() => {
@@ -35,7 +38,7 @@ function ProductDetails() {
 
     return (
         <>
-            <div className='p-10 bg-white dark:bg-[#252d37] dark:text-white h-dvh'>
+            <div className='p-10 bg-white dark:bg-[#252d37] dark:text-white'>
                 {product && (
 
                     <div className="flex flex-col space-y-4">
@@ -44,7 +47,7 @@ function ProductDetails() {
                                 alt="Product gallery 1"
                                 src={`${product.productImage}`}
                                 className="w-full object-cover"
-                                style={{ height: "700px" }}
+                                style={cartItems.length < 2 ? { height: "100vh" } : {}}
                             />
                         </div>
                         <div className="w-full flex flex-row justify-between">
@@ -75,19 +78,20 @@ function ProductDetails() {
                             {/* Button to add the item in the card */}
                             <button
                                 type="button"
-                                className="select-none rounded-md bg-black px-10 py-5 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:bg-white dark:text-black dark:hover:bg-white/80  dark:focus-visible:outline-white"
+                                className="select-none flex rounded-md bg-black px-10 py-5 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:bg-white dark:text-black dark:hover:bg-white/80  dark:focus-visible:outline-white"
                                 onClick={
                                     async () => {
                                         console.log("Product : ", product);
                                         dispatch({ type: "ADD_ITEM_IN_CART", payload: { item: { ...product, productQuantity: qty } } })
                                         if (isUserLoggedIn()) {
-                                            await addItemToCart(product._id, qty)
+                                            await addItemToCart(product._id, qty, true)
+                                            toast.success(response.data.message);
                                         }
                                         setQty(1)
                                     }
                                 }
                             >
-                                <ShoppingBagIcon className='inline' height={"24px"} width={"24px"}  /> <span className="text-base font-bold">Add To Cart</span>
+                                <ShoppingBagIcon className='inline mr-1' height={"24px"} width={"24px"} /> <span className="text-base font-bold">Add To Cart</span>
                             </button>
                         </div>
                     </div>

@@ -18,9 +18,9 @@ function PlacedItem({ product }) {
                     <div>
                         <div className="flex justify-between">
                             <h3 className="text-lg ">
-                                <Link to={`/product/${product.itemID}`} className="font-bold text-black dark:text-white">
+                                <div className="font-bold text-black dark:text-white">
                                     {product.itemName}
-                                </Link>
+                                </div>
                             </h3>
                         </div>
                         <div className="mt-1 flex items-end">

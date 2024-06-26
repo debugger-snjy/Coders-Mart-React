@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom'
 import { isAnyFieldEmpty, isEmailValid, isValidName, isValidPassword, isValidPhoneNumber } from "../../utils/validations"
@@ -7,6 +7,10 @@ import { isUserLoggedIn } from "../../utils/tokenOperations.js"
 function Signup() {
 
     const navigateTo = useNavigate();
+    const [passwordInvalid, setPasswordInvalid] = useState(null)
+    const [nameInvalid, setNameInvalid] = useState(null)
+    const [emailInvalid, setEmailInvalid] = useState(null)
+    const [phoneInvalid, setPhoneInvalid] = useState(null)
 
     useEffect(() => {
         if (isUserLoggedIn()) {
@@ -14,7 +18,47 @@ function Signup() {
             navigateTo("/");
         }
     })
-    
+
+    const checkInputs = (e) => {
+        console.log(e)
+        if (e.target.name === "password") {
+            if (!isValidPassword(e.target.value)) {
+                setPasswordInvalid(true);
+            }
+            else {
+                setPasswordInvalid(false)
+                console.log("Deon")
+            }
+        }
+        if (e.target.name === "name") {
+            if (!isValidName(e.target.value)) {
+                setNameInvalid(true);
+            }
+            else {
+                setNameInvalid(false)
+                console.log("Deon")
+            }
+        }
+        if (e.target.name === "email") {
+            if (!isEmailValid(e.target.value)) {
+                setEmailInvalid(true);
+            }
+            else {
+                setEmailInvalid(false)
+                console.log("Deon")
+            }
+        }
+        if (e.target.name === "phone") {
+            if (!isValidPhoneNumber(e.target.value)) {
+                setPhoneInvalid(true);
+            }
+            else {
+                setPhoneInvalid(false)
+                console.log("Deon")
+            }
+        }
+    }
+
     const signUpUser = async () => {
         let name = document.getElementById('name').value;
         let email = document.getElementById('email').value;
@@ -41,19 +85,28 @@ function Signup() {
         let emptyFieldValidations = isAnyFieldEmpty({ name, email, phone, password, gender });
 
         if (emptyFieldValidations.isEmpty) {
-            toast.error(emptyFieldValidations.message)
+
+            let responseMessage = emptyFieldValidations.message.toLowerCase();
+
+            if (responseMessage.includes("name") && responseMessage.includes("email") && responseMessage.includes("phone") && responseMessage.includes("gender") && responseMessage.includes("password")) {
+                return toast.error("All Form Fields are Empty")
+            }
+            else {
+                return toast.error(emptyFieldValidations?.message || "Invalid Form Data")
+            }
+
         }
         if (!isEmailValid(email)) {
-            toast.error("Invalid Email Address")
+            return toast.error("Invalid Email Address")
         }
         if (!isValidPhoneNumber(phone)) {
-            toast.error("Invalid Phone Number")
+            return toast.error("Invalid Phone Number")
         }
         if (!isValidPassword(password)) {
-            toast.error("Invalid Password")
+            return toast.error("Invalid Password")
         }
         if (!isValidName(name)) {
-            toast.error("Invalid Name")
+            return toast.error("Invalid Name")
         }
 
         const finalUserData = {
@@ -68,11 +121,19 @@ function Signup() {
         // Calling the API Call From the Service
         const apiResponse = await createNewUserAPI(finalUserData);
 
+        console.log(apiResponse)
+
         if (!apiResponse || !apiResponse?.success) {
-            toast.error(apiResponse?.message ?? "User Not Created")
+            toast.error(apiResponse.message)
         }
         else {
             toast.success(apiResponse.message)
+            document.getElementById("resgistrationForm").reset();
+            setPasswordInvalid(null);
+            setNameInvalid(null);
+            setEmailInvalid(null);
+            setPhoneInvalid(null);
+            navigateTo("/login")
         }
     }
 
@@ -84,23 +145,24 @@ function Signup() {
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                             Create an account
                         </h1>
-                        <form className="space-y-4 md:space-y-6" action="#">
+                        <form id='resgistrationForm' className="space-y-4 md:space-y-6" action="#">
                             <div>
                                 <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name <span className="text-red-700">*</span></label>
-                                <input type="text" name="name" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your full name" required />
+                                <input type="text" onInput={(e) => checkInputs(e)} name="name" id="name" className={`bg-gray-50 border ${nameInvalid === true ? 'border-[3px] dark:border-red-300 border-red-500' : nameInvalid === false ? 'border-[3px] dark:border-green-400 border-green-500 ' : ''} border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`} placeholder="Your full name" required />
                             </div>
                             <div>
                                 <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email <span className="text-red-700">*</span></label>
-                                <input type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required />
+                                <input type="email" onInput={(e) => checkInputs(e)} name="email" id="email" className={`bg-gray-50 border ${emailInvalid === true ? 'border-[3px] dark:border-red-300 border-red-500' : emailInvalid === false ? 'border-[3px] dark:border-green-400 border-green-500 ' : ''} border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`} placeholder="name@company.com" required />
                             </div>
                             <div>
                                 <label htmlFor="phone" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone <span className="text-red-700">*</span></label>
-                                <input type="tel" name="phone" id="phone" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="123-456-7890" required />
+                                <input type="tel" onInput={(e) => checkInputs(e)} name="phone" id="phone" className={`bg-gray-50 border ${phoneInvalid === true ? 'border-[3px] dark:border-red-300 border-red-500' : phoneInvalid === false ? 'border-[3px] dark:border-green-400 border-green-500 ' : ''} border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`} placeholder="123-456-7890" required />
                             </div>
 
                             <div>
                                 <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password <span className="text-red-700">*</span></label>
-                                <input type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                                <input type="password" onInput={(e) => checkInputs(e)} name="password" id="password" placeholder="Password" className={`bg-gray-50 border-gray-300 ${passwordInvalid === true ? 'border-[3px] dark:border-red-300 border-red-500' : passwordInvalid === false ? 'border-[3px] dark:border-green-400 border-green-500 ' : ''} text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`} required />
+                                {passwordInvalid === true && <p id="helper-text-explanation" class="mt-2 text-sm text-red-800 dark:text-red-400">Password Must Contain atleast 8 Characters and atleast 1 Upper, 1 Lower, 1 Special and 1 Number in Your Password</p>}
                             </div>
                             <div>
                                 <label htmlFor="gender" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender <span className="text-red-700">*</span></label>

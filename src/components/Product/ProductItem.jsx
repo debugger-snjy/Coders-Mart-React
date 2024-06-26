@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { cartContext } from '../../context/cartContext';
 import { Minus, MinusCircleIcon, Plus, PlusCircleIcon } from 'lucide-react';
-import { addItemToCart, getCartItems } from "../../api/cart.service.js";
+import { addItemToCart, getCartItems, removeItemFromCart } from "../../api/cart.service.js";
 import { isUserLoggedIn } from '../../utils/tokenOperations.js';
 import { Link } from 'react-router-dom';
 
@@ -32,37 +32,53 @@ function ProductItem({ product }) {
                         <h2 className="text-lg font-semibold">{product.productName}</h2>
                         <p className="text-lg font-semibold m-0">₹{product.productPrice}</p>
                     </div>
-                    <div>
-                        <div className='text-lg font-medium'>Quantity</div>
-                        <p className="text-lg font-semibold select-none">
+                    {/* <div> */}
+                    {/* <div className='text-lg font-medium'>Quantity</div> */}
+                    {/* <p className="text-lg font-semibold select-none"> */}
 
-                            {/* Decreasing product quantity to Order */}
-                            {qty == 1 ? < MinusCircleIcon size={20} className="text-gray-500 dark:text-gray-700 inline mr-1" disabled={true} onClick={() => setQty((prevQty) => prevQty == 1 ? prevQty : prevQty - 1)} /> : < MinusCircleIcon size={20} className="text-black dark:text-white inline mr-1" onClick={() => setQty((prevQty) => prevQty == 1 ? prevQty : prevQty - 1)} />}
-                            <span className='mx-2 text-bold text-lg'>{qty}</span>
-                            {/* Increasing product quantity to Order  */}
-                            <PlusCircleIcon size={20} className="text-black dark:text-white inline ml-1" onClick={() => setQty((prevQty) => prevQty + 1)} />
-                        </p>
-                    </div>
+                    {/* Decreasing product quantity to Order */}
+                    {/* {qty == 1 ? < MinusCircleIcon size={20} className="text-gray-500 dark:text-gray-700 inline mr-1" disabled={true} onClick={() => setQty((prevQty) => prevQty == 1 ? prevQty : prevQty - 1)} /> : < MinusCircleIcon size={20} className="text-black dark:text-white inline mr-1" onClick={() => setQty((prevQty) => prevQty == 1 ? prevQty : prevQty - 1)} />} */}
+                    {/* <span className='mx-2 text-bold text-lg'>{qty}</span> */}
+                    {/* Increasing product quantity to Order  */}
+                    {/* <PlusCircleIcon size={20} className="text-black dark:text-white inline ml-1" onClick={() => setQty((prevQty) => prevQty + 1)} /> */}
+                    {/* </p> */}
+                    {/* </div> */}
                 </div>
                 <div className="flex flex-col space-y-2">
 
                     {/* Button to add the item in the card */}
-                    <button
+                    {((state.cartItems && state.cartItems.find((item) => item._id === product._id) === undefined) || !state.cartItems) && <button
                         type="button"
                         className="select-none rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:bg-white dark:text-black dark:hover:bg-white/80  dark:focus-visible:outline-white"
                         onClick={
                             async () => {
                                 console.log("Product : ", product);
-                                dispatch({ type: "ADD_ITEM_IN_CART", payload: { item: { ...product, productQuantity: qty } } })
+                                dispatch({ type: "ADD_ITEM_IN_CART", payload: { item: { ...product, productQuantity: 1 } } })
                                 if (isUserLoggedIn()) {
-                                    await addItemToCart(product._id, qty)
+                                    await addItemToCart(product._id, qty,false)
                                 }
                                 setQty(1)
                             }
                         }
                     >
                         Add To Cart
-                    </button>
+                    </button>}
+                    {(state.cartItems && state.cartItems.find((item) => item._id === product._id) !== undefined) && <button
+                        type="button"
+                        className="select-none rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:bg-white dark:text-black dark:hover:bg-white/80  dark:focus-visible:outline-white"
+                        onClick={
+                            async () => {
+                                console.log("Product : ", product);
+                                dispatch({ type: "REMOVE_ITEM_IN_CART", payload: { _id: product._id } })
+                                if (isUserLoggedIn()) {
+                                    await removeItemFromCart(product._id)
+                                }
+                                setQty(1)
+                            }
+                        }
+                    >
+                        Remove From Cart
+                    </button>}
                 </div>
                 <div>
                     <h3 className="text-sm font-semibold">Product Details:</h3>
