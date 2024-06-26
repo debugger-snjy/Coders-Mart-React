@@ -124,16 +124,17 @@ function Cart() {
                                             </div>
                                             <div className="flex items-center justify-between  border-black dark:border-white border-y-[5px] border-dashed py-4 ">
                                                 <dt className="text-base font-black tracking-wide text-black/90 dark:text-white/90">Total Amount</dt>
-                                                
+
                                                 {/* TODO : Add Discount Functionality */}
                                                 {/* Showing the total bill after removing the discount */}
                                                 {/* <dd className="text-base font-black tracking-wide text-black/90 dark:text-white/90">₹ {((totalBill - ((totalBill * 10) / 100))).toFixed(2)}</dd> */}
                                                 <dd className="text-base font-black tracking-wide text-black/90 dark:text-white/90">₹ {totalBill.toFixed(2)}</dd>
                                             </div>
                                         </dl>
-                                        <div className="px-2 pb-4 font-bold dark:text-green-400 text-green-800">
+                                        {/* TODO : Add Discount Functionality */}
+                                        {/* <div className="px-2 pb-4 font-bold dark:text-green-400 text-green-800">
                                             You will save ₹ 3,431 on this order 🎉
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </section>
                             </form>
