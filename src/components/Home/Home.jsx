@@ -32,7 +32,6 @@ function Home() {
 
     useEffect(() => {
         fetchProducts();
-        
     }, []);
 
     return (
@@ -49,11 +48,18 @@ function Home() {
                     ))}
 
                 </div>
-                {products.length === 0 && <div className='text-2xl text-red-800 font-bold dark:text-red-400 text-center w-full'>
+                {/* {products.length === 0 && <div className='text-2xl text-red-800 font-bold dark:text-red-400 text-center w-full'>
                     No Product Items Are Added !!<br />
                     <button type="button" onClick={addDummyProducts} className="mt-5 px-10 py-3 bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-200 font-medium rounded-lg text-sm text-center inline-flex items-center me-2 mb-2">
                         <span className="text-md text-white dark:text-black font-bold">Add Dummy Data</span>
                     </button>
+                </div>} */}
+
+                {products.length === 0 && <div class='flex space-x-2 justify-center items-center mt-5'>
+                    <span class='sr-only'>Loading...</span>
+                    <div class='h-8 w-8 dark:bg-white bg-[#252d37] rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+                    <div class='h-8 w-8 dark:bg-white bg-[#252d37] rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+                    <div class='h-8 w-8 dark:bg-white bg-[#252d37] rounded-full animate-bounce'></div>
                 </div>}
             </div>
         </>

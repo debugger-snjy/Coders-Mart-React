@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Menu, X, ChevronDown, ChevronRight, ShoppingCart, Sun, Moon } from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import useTheme from "../../context/themeContext.js"
 import { fetchUser } from '../../utils/tokenOperations.js'
 import { logoutUserAPI } from "../../api/user.service.js"
@@ -95,13 +95,14 @@ function Header() {
 
 
             <div className="ml-1 mt-1 flex grow justify-end items-center">
-                <Link className='text-black dark:text-white mx-2' to="/">Home</Link>
-                {JSON.parse(localStorage.getItem("user")) && <Link className='text-black dark:text-white mx-2 cursor-pointer' to="/cart">Cart</Link>}
+                <NavLink className={({ isActive }) => isActive ? "text-black dark:text-white mx-2 cursor-pointer font-bold" : "text-black dark:text-white mx-2 cursor-pointer"} to="/">Home</NavLink>
+                {JSON.parse(localStorage.getItem("user")) && <NavLink className={({ isActive }) => isActive ? "text-black dark:text-white mx-2 cursor-pointer font-bold" : "text-black dark:text-white mx-2 cursor-pointer"} to="/cart">Cart</NavLink>}
+                {JSON.parse(localStorage.getItem("user")) && <NavLink className={({ isActive }) => isActive ? "text-black dark:text-white mx-2 cursor-pointer font-bold" : "text-black dark:text-white mx-2 cursor-pointer"} to="/orders" >Orders</NavLink>}
                 {JSON.parse(localStorage.getItem("user")) && <Link className='text-black dark:text-white mx-2 cursor-pointer' onClick={logoutUser}>Signout</Link>}
-                {!JSON.parse(localStorage.getItem("user")) && <Link className='text-black dark:text-white mx-2' to="/login">Login</Link>}
-                {!JSON.parse(localStorage.getItem("user")) && <Link className='text-black dark:text-white mx-2' to="/signup">Signup</Link>}
+                {!JSON.parse(localStorage.getItem("user")) && <NavLink className={({ isActive }) => isActive ? "text-black dark:text-white mx-2 cursor-pointer font-bold" : "text-black dark:text-white mx-2 cursor-pointer"} to="/login" >Login</NavLink>}
+                {!JSON.parse(localStorage.getItem("user")) && <NavLink className={({ isActive }) => isActive ? "text-black dark:text-white mx-2 cursor-pointer font-bold" : "text-black dark:text-white mx-2 cursor-pointer"} to="/signup" >Signup</NavLink>}
 
-                <div className='mx-3 mr-8 relative'>
+                <div className='mx-0 mr-8 relative'>
                     <div className="relative inline-flex">
 
                         {/* Theme Switcher */}

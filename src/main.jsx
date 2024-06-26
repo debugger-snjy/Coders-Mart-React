@@ -12,6 +12,7 @@ import Checkout from './components/Checkout/Checkout.jsx'
 import Login from './components/Login/Login.jsx'
 import Signup from './components/Signup/Signup.jsx'
 import ProductDetails from './components/Product/ProductDetails.jsx'
+import Orders from './components/Orders/Order.jsx'
 
 // Created router and all its path 
 const router = createBrowserRouter(
@@ -23,6 +24,7 @@ const router = createBrowserRouter(
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/orders" element={<Orders />} />
         </Route>
     )
 )
@@ -33,7 +35,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <CartProvider>
         <RouterProvider router={router} />
         <Toaster
-            position="bottom-right"
+            
+            position="top-center"
+            gutter={3}
             toastOptions={
                 {
                     style: { backgroundColor: 'black', color: 'white' }
