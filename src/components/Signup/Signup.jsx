@@ -140,7 +140,7 @@ function Signup() {
     return (
         <div className="bg-white dark:bg-[#252d37] py-10">
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
-                <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                <div className="w-full bg-gray-200 rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                             Create an account
@@ -148,20 +148,23 @@ function Signup() {
                         <form id='resgistrationForm' className="space-y-4 md:space-y-6" action="#">
                             <div>
                                 <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name <span className="text-red-700">*</span></label>
-                                <input type="text" onInput={(e) => checkInputs(e)} name="name" id="name" className={`bg-gray-50 border ${nameInvalid === true ? 'border-[3px] dark:border-red-300 border-red-500' : nameInvalid === false ? 'border-[3px] dark:border-green-400 border-green-500 ' : ''} border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`} placeholder="Your full name" required />
+                                <input type="text" onInput={(e) => checkInputs(e)} name="name" id="name" className={`bg-gray-50 border ${nameInvalid === true ? 'border-[3px] dark:border-red-300 border-red-500' : nameInvalid === false ? 'border-[3px] dark:border-green-400 border-green-500 ' : ''} border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white `} placeholder="Your Full name" required />
+                                {nameInvalid === true && <p id="helper-text-explanation" class="mt-2 text-sm text-red-800 dark:text-red-400">Invalid Name</p>}
                             </div>
                             <div>
                                 <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email <span className="text-red-700">*</span></label>
-                                <input type="email" onInput={(e) => checkInputs(e)} name="email" id="email" className={`bg-gray-50 border ${emailInvalid === true ? 'border-[3px] dark:border-red-300 border-red-500' : emailInvalid === false ? 'border-[3px] dark:border-green-400 border-green-500 ' : ''} border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`} placeholder="name@company.com" required />
+                                <input type="email" onInput={(e) => checkInputs(e)} name="email" id="email" className={`bg-gray-50 border ${emailInvalid === true ? 'border-[3px] dark:border-red-300 border-red-500' : emailInvalid === false ? 'border-[3px] dark:border-green-400 border-green-500 ' : ''} border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white `} placeholder="Your Email Address" required />
+                                {emailInvalid === true && <p id="helper-text-explanation" class="mt-2 text-sm text-red-800 dark:text-red-400">Invalid Email Address</p>}
                             </div>
                             <div>
                                 <label htmlFor="phone" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone <span className="text-red-700">*</span></label>
-                                <input type="tel" onInput={(e) => checkInputs(e)} name="phone" id="phone" className={`bg-gray-50 border ${phoneInvalid === true ? 'border-[3px] dark:border-red-300 border-red-500' : phoneInvalid === false ? 'border-[3px] dark:border-green-400 border-green-500 ' : ''} border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`} placeholder="123-456-7890" required />
+                                <input type="tel" onInput={(e) => checkInputs(e)} name="phone" id="phone" className={`bg-gray-50 border ${phoneInvalid === true ? 'border-[3px] dark:border-red-300 border-red-500' : phoneInvalid === false ? 'border-[3px] dark:border-green-400 border-green-500 ' : ''} border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white `} placeholder="Your Phone Number" required />
+                                {phoneInvalid === true && <p id="helper-text-explanation" class="mt-2 text-sm text-red-800 dark:text-red-400">Invalid Phone Number</p>}
                             </div>
 
                             <div>
                                 <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password <span className="text-red-700">*</span></label>
-                                <input type="password" onInput={(e) => checkInputs(e)} name="password" id="password" placeholder="Password" className={`bg-gray-50 border-gray-300 ${passwordInvalid === true ? 'border-[3px] dark:border-red-300 border-red-500' : passwordInvalid === false ? 'border-[3px] dark:border-green-400 border-green-500 ' : ''} text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`} required />
+                                <input type="password" onInput={(e) => checkInputs(e)} name="password" id="password" placeholder="Your Password" className={`bg-gray-50 border-gray-300 ${passwordInvalid === true ? 'border-[3px] dark:border-red-300 border-red-500' : passwordInvalid === false ? 'border-[3px] dark:border-green-400 border-green-500 ' : ''} text-gray-900 text-sm rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white `} required />
                                 {passwordInvalid === true && <p id="helper-text-explanation" class="mt-2 text-sm text-red-800 dark:text-red-400">Password Must Contain atleast 8 Characters and atleast 1 Upper, 1 Lower, 1 Special and 1 Number in Your Password</p>}
                             </div>
                             <div>
@@ -180,7 +183,7 @@ function Signup() {
                             </div>
                             <div>
                                 <label htmlFor="address" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
-                                <textarea type="text" name="address" id="address" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your address" required />
+                                <textarea type="text" name="address" id="address" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white " placeholder="Your address" required />
                             </div>
                             <button type="button" onClick={signUpUser} className="w-full focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Sign Up</button>
                             <p className="text-sm text-center font-light text-gray-500 dark:text-gray-400">

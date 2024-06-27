@@ -29,17 +29,27 @@ function PlacedOrderItem({ order }) {
                         <div className="space-y-6 rounded-lg border bg-gray-200 dark:bg-gray-700 border-gray-600 p-6 shadow-sm dark:border-gray-700">
                             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Order Details</h3>
 
+                            <div className="Orderdetails flex flex-col">
+                                <div>
+                                    <span className="font-black">Order Address : </span>{order.orderAddress}
+                                </div>
+                                <div>
+                                    <span className="font-black">Order Payment Mode : </span>{order.paymentMode}
+                                </div>
+                            </div>
+
                             <div className="space-y-4 bg-gray-400 rounded-lg p-6 dark:bg-gray-800">
                                 <div className="space-y-2">
                                     <dl className="flex items-center justify-between gap-4">
                                         <dt className="font-normal text-gray-800 dark:text-gray-400">Original price</dt>
-                                        <dd className="font-medium text-gray-900 dark:text-white">₹ {order.orderAmount + 1000 + 3431}</dd>
+                                        <dd className="font-medium text-gray-900 dark:text-white">₹ {order.orderAmount}</dd>
                                     </dl>
 
-                                    <dl className="flex items-center justify-between gap-4">
+                                    {/* TODO */}
+                                    {/* <dl className="flex items-center justify-between gap-4">
                                         <dt className="font-normal text-gray-800 dark:text-gray-400">Discount</dt>
                                         <dd className="text-base font-medium dark:text-green-400 text-green-800">₹ 3,431</dd>
-                                    </dl>
+                                    </dl> */}
 
                                     <dl className="flex items-center justify-between gap-4">
                                         <dt className="font-normal text-gray-800 dark:text-gray-400">Shipping</dt>
@@ -50,7 +60,7 @@ function PlacedOrderItem({ order }) {
 
                                 <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
                                     <dt className="text-lg font-bold text-gray-900 dark:text-white">Total</dt>
-                                    <dd className="text-lg font-bold text-gray-900 dark:text-white">₹ {order.orderAmount}</dd>
+                                    <dd className="text-lg font-bold text-gray-900 dark:text-white">₹ {(order.orderAmount + 1000).toFixed(2)}</dd>
                                 </dl>
                             </div>
 

@@ -36,7 +36,7 @@ function Home() {
 
     return (
         <>
-            <div className={`container-xxl px-10 py-10 w-full bg-white dark:bg-[#252d37]`} style={products.length === 0 ? { height: '86vh' } : {}}>
+            <div className={`container-xxl px-10 py-10 w-full bg-white dark:bg-[#252d37]`} style={products.length === 0 ? { height: '100vh' } : {}}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
 
                     {products && console.log(products)}
