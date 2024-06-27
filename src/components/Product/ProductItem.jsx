@@ -18,7 +18,7 @@ function ProductItem({ product }) {
     return (
         <div className="p-4 rounded-lg relative border-gray-500 border-2 hover:shadow-gray-600 bg-gray-300 hover:border-3 dark:bg-gray-900 dark:text-white dark:hover:shadow-gray-400 dark:hover:border-white dark:hover:border-3">
 
-                        {product.productInStock === 0 ? <span className="ribbon">OUT OF STOCK</span> : product.productInStock <= 5 ? <span className="ribbon bg-yellow-200 text-black">FEW REMAINING</span> : ''}
+            {product.productInStock === 0 ? <span className="ribbon">OUT OF STOCK</span> : product.productInStock <= 5 ? <span className="ribbon bg-yellow-200 text-black">FEW REMAINING</span> : ''}
             <div className="flex flex-col space-y-4">
                 <div className="overflow-hidden rounded-md">
                     <Link to={`/product/${product._id}`}>

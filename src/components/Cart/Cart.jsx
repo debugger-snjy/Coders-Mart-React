@@ -33,7 +33,10 @@ function Cart() {
     }, [cartItems]);
 
     const isAnyProductOutOfStock = useMemo(() => {
-        let data = cartItems.filter((item) => item.productInStock === 0)
+        let data=[];
+        if(cartItems){
+            data = cartItems.filter((item) => item.productInStock === 0)
+        }
 
         return data.length === 0 ? false : true;
     })
@@ -42,7 +45,7 @@ function Cart() {
 
     // returning the JSX
     return (
-        <div className={`px-10 dark:bg-[#252d37] dark:text-white lg:${totalCartItems < 4 ? { height: "100vh" } : {}} sm:h-screen xs:h-screen`}>
+        <div className={`px-10 dark:bg-[#252d37] dark:text-white lg:${totalCartItems < 4 ? { height: "100vh" } : {}} sm:h-full xs:h-full md:h-screen lg:h-screen xl:h-screen"`}>
             <div className="mx-auto max-w-7xl px-2 lg:px-0 ">
                 <div className="mx-auto max-w-2xl py-8 lg:max-w-7xl">
                     <div className="flex justify-between">

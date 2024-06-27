@@ -1,6 +1,7 @@
 import axios from "axios";
 import { fetchToken, fetchUser } from "../utils/tokenOperations";
 import { addItemToCart, getCartItems } from "./cart.service";
+import { fetchProductAPI } from "./product.service"
 
 const server = 'http://localhost:8000/v1/api';
 
@@ -93,7 +94,10 @@ const loginUserAPI = async (userLoginData) => {
                 allCartItems = {
                     user: responseData.data.user,
                     totalCartItems: allItemsInCartResponse.data.userCart.length === 0 ? 0 : allItemsInCartResponse.data.userCart[0].cartItems.reduce((prev, current) => prev + current.quantity, 0),
-                    cartItems: allItemsInCartResponse.data.userCart.length === 0 ? [] : allItemsInCartResponse.data.userCart[0].cartItems.map((item) => {
+                    cartItems: allItemsInCartResponse.data.userCart.length === 0 ? [] : await Promise.all(allItemsInCartResponse.data.userCart[0].cartItems.map(async (item) => {
+
+                        const productDetails = await fetchProductAPI(item.itemID)
+
                         return {
                             _id: item.itemID,
                             productName: item.itemName,
@@ -101,8 +105,9 @@ const loginUserAPI = async (userLoginData) => {
                             productDescription: item.itemDescription,
                             productImage: item.itemImage,
                             productQuantity: item.quantity,
+                            productInStock: productDetails.data.product.productInStock,
                         }
-                    })
+                    }))
                 }
             }
 

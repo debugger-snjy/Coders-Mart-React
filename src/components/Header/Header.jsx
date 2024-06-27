@@ -45,7 +45,20 @@ function Header() {
     const { state } = useContext(cartContext)
 
     useEffect(() => {
+        if (isUserLoggedIn()) {
+            const avatarButton = document.getElementById('avatarButton');
+            const userDropdown = document.getElementById('userDropdown');
 
+            const toggleDropdown = () => {
+                userDropdown.classList.toggle('hidden');
+            };
+
+            avatarButton.addEventListener('click', toggleDropdown);
+
+            return () => {
+                avatarButton.removeEventListener('click', toggleDropdown);
+            };
+        }
     }, [state])
 
     const navigateTo = useNavigate();
@@ -133,7 +146,7 @@ function Header() {
                     <>
                         <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" className="w-10 h-10 rounded-full cursor-pointer" src="https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png" alt="User dropdown" />
 
-                        <div id="userDropdown" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                        <div id="userDropdown" className="z-10 relative hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                             <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
                                 <div>{JSON.parse(localStorage.getItem("user")) ? JSON.parse(localStorage.getItem("user")).name : "Guest User"}</div>
                             </div>
@@ -154,7 +167,7 @@ function Header() {
                                             <Link to={"/cart"} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Cart</Link>
                                         </li>
                                         <li>
-                                            <Link to={"/order"} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Orders</Link>
+                                            <Link to={"/orders"} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Orders</Link>
                                         </li>
                                     </>
                                 }

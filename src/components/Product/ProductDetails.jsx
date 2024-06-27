@@ -56,44 +56,60 @@ function ProductDetails() {
                                 <h2 className="text-lg font-semibold">{product.productName}</h2>
                                 <p className="text-lg font-semibold m-0">₹{product.productPrice}</p>
                             </div>
-                            <div>
-                                <div className='text-lg font-medium'>Quantity</div>
-                                <p className="text-lg font-semibold select-none">
+                            <div className='flex flex-row space-x-5'>
+                                {product.productInStock!==0 && <div>
+                                    <div className='text-lg font-medium'>Quantity</div>
+                                    <p className="text-lg font-semibold select-none">
 
-                                    {/* Decreasing product quantity to Order */}
-                                    {qty == 1 ? < MinusCircleIcon size={20} className="text-gray-500 dark:text-gray-700 inline mr-1" disabled={true} onClick={() => setQty((prevQty) => prevQty == 1 ? prevQty : prevQty - 1)} /> : < MinusCircleIcon size={20} className="text-black dark:text-white inline mr-1" onClick={() => setQty((prevQty) => prevQty == 1 ? prevQty : prevQty - 1)} />}
-                                    <span className='mx-2 text-bold text-lg'>{qty}</span>
-                                    {/* Increasing product quantity to Order  */}
-                                    <PlusCircleIcon size={20} className="text-black dark:text-white inline ml-1" onClick={() => setQty((prevQty) => prevQty + 1)} />
-                                </p>
+                                        {/* Decreasing product quantity to Order */}
+                                        {qty == 1 ? < MinusCircleIcon size={20} className="text-gray-500 dark:text-gray-700 inline mr-1" disabled={true} onClick={() => setQty((prevQty) => prevQty == 1 ? prevQty : prevQty - 1)} /> : < MinusCircleIcon size={20} className="text-black dark:text-white inline mr-1" onClick={() => setQty((prevQty) => prevQty == 1 ? prevQty : prevQty - 1)} />}
+                                        <span className='mx-2 text-bold text-lg'>{qty}</span>
+                                        {/* Increasing product quantity to Order  */}
+                                        <PlusCircleIcon size={20} className="text-black dark:text-white inline ml-1" onClick={() => setQty((prevQty) => prevQty + 1)} />
+                                    </p>
+                                </div>}
+                                <div>
+                                    {/* Button to add the item in the card */}
+                                    {product.productInStock === 0 ? <button
+                                        type="button"
+                                        className="select-none rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:bg-gray-400 dark:text-gray-800"
+                                        disabled:true
+                                    >
+                                        OUT OF STOCK
+                                    </button>
+                                        : <button
+                                            type="button"
+                                            className="select-none flex rounded-md bg-black px-10 py-5 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:bg-white dark:text-black dark:hover:bg-white/80  dark:focus-visible:outline-white"
+                                            onClick={
+                                                async () => {
+                                                    console.log("Product : ", product);
+                                                    dispatch({ type: "ADD_ITEM_IN_CART", payload: { item: { ...product, productQuantity: qty } } })
+                                                    if (isUserLoggedIn()) {
+                                                        await addItemToCart(product._id, qty, true)
+                                                        toast.success(response.data.message);
+                                                    }
+                                                    setQty(1)
+                                                }
+                                            }
+                                        >
+                                            <ShoppingBagIcon className='inline mr-1' height={"24px"} width={"24px"} /> <span className="text-base font-bold">Add To Cart</span>
+                                        </button>}
+                                </div>
                             </div>
                         </div>
                         <div className="flex flex-row justify-between space-y-2">
                             <div>
-                                <h3 className="text-sm font-semibold">Product Details:</h3>
+                                <h3 className="text-lg font-medium">Product Details : </h3>
                                 <p className="text-sm">
                                     {product.productDescription}
                                 </p>
+                                <h3 className="text-lg font-medium mt-3">Product In Stock : </h3>
+                                <p className="text-sm">
+                                    {product.productInStock}
+                                </p>
+
                             </div>
 
-                            {/* Button to add the item in the card */}
-                            <button
-                                type="button"
-                                className="select-none flex rounded-md bg-black px-10 py-5 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:bg-white dark:text-black dark:hover:bg-white/80  dark:focus-visible:outline-white"
-                                onClick={
-                                    async () => {
-                                        console.log("Product : ", product);
-                                        dispatch({ type: "ADD_ITEM_IN_CART", payload: { item: { ...product, productQuantity: qty } } })
-                                        if (isUserLoggedIn()) {
-                                            await addItemToCart(product._id, qty, true)
-                                            toast.success(response.data.message);
-                                        }
-                                        setQty(1)
-                                    }
-                                }
-                            >
-                                <ShoppingBagIcon className='inline mr-1' height={"24px"} width={"24px"} /> <span className="text-base font-bold">Add To Cart</span>
-                            </button>
                         </div>
                     </div>
                 )}

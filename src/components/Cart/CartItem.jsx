@@ -9,13 +9,14 @@ function CartItem({ product }) {
 
     // Getting the dispatch function to execute action function
     const { dispatch } = useContext(cartContext)
+    console.log(product)
 
     return (
-        <div key={product._id} className="bg-gray-200 px-5 py-2 mb-5 rounded-lg border-2 border-black hover:shadow-md hover:shadow-black dark:bg-gray-900 dark:border-white dark:hover:bg-gray-800 dark:hover:shadow-white">
+        <div key={product._id} className="relative bg-gray-200 px-5 py-2 mb-5 rounded-lg border-2 border-black hover:shadow-md hover:shadow-black dark:bg-gray-900 dark:border-white dark:hover:bg-gray-800 dark:hover:shadow-white">
             <li className="flex py-2 sm:py-2 items-center">
-                <div className="flex-shrink-0 relative">
-                    <Link to={`/product/${product._id}`}>
                         {product.productInStock === 0 ? <span className="ribbon text-sm">OUT OF STOCK</span> : product.productInStock <= 5 ? <span className="ribbon text-sm bg-yellow-200 text-black">FEW REMAINING</span> : ''}
+                <div className="flex-shrink-0 ">
+                    <Link to={`/product/${product._id}`}>
                         <img
                             src={product.productImage}
                             alt={product.productName}
@@ -53,7 +54,7 @@ function CartItem({ product }) {
 
                                         {/* Calling the Increment action function to increase item by one */}
                                         {
-                                            product.productQuantity === product.productInStock ? <PlusCircleIcon size={20} className="text-gray-500 inline ml-1" /> : <PlusCircleIcon size={20} className="text-black dark:text-white inline ml-1" onClick={async () => {
+                                            product.productQuantity >= product.productInStock ? <PlusCircleIcon size={20} className="text-gray-500 inline ml-1" /> : <PlusCircleIcon size={20} className="text-black dark:text-white inline ml-1" onClick={async () => {
                                                 dispatch({ type: "INCREMENT_ITEM_IN_CART", payload: { _id: product._id } })
                                                 if (isUserLoggedIn()) {
                                                     await updateQuantityInCartItem(product._id, 1, "add")

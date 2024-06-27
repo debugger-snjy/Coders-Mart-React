@@ -129,8 +129,8 @@ function Checkout() {
     
     if (isUserLoggedIn()) {
         return (
-            <>
-                <div className="grid space-x-10 sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32 py-10 dark:bg-[#252d37] dark:text-white" style={cartItems.length < 3 ? { height: "100vh" } : {}}>
+        <>
+                <div className="grid sm:space-x-0 md:space-x-0  lg:space-x-5 xl:space-x-10  sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32 py-10 dark:bg-[#252d37] dark:text-white lg:h-screen xl:h-screen" style={cartItems.length > 3 ? { height: "100vh" } : {}}>
                     <div className="px-2">
                         <p className="text-black dark:text-white text-xl font-medium">Order Summary</p>
                         <p className="text-gray-400 dark:text-gray-300">Check your items. And select a suitable shipping method.</p>
@@ -168,7 +168,7 @@ function Checkout() {
                             </div>
                         </form>
                     </div>
-                    <div className="h-fit bg-gray-50 dark:bg-gray-700 rounded-xl shadow-lg shadow-gray-900 px-4 pt-8 lg:mt-0">
+                    <div className="h-fit sm:mt-10 md:mt-10 bg-gray-50 dark:bg-gray-700 rounded-xl shadow-lg shadow-gray-900 px-4 pt-8 lg:mt-0">
                         <p className="text-xl font-medium">Payment Details</p>
                         <p className="text-gray-400 dark:text-gray-300">Complete your order by providing your details.</p>
                         <div className="">
