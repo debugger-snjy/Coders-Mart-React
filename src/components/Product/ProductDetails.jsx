@@ -42,7 +42,8 @@ function ProductDetails() {
                 {product && (
 
                     <div className="flex flex-col space-y-4">
-                        <div className="overflow-hidden rounded-md">
+                        <div className="overflow-hidden rounded-md relative">
+                            {product.productInStock === 0 ? <span className="ribbon">OUT OF STOCK</span> : product.productInStock <= 5 ? <span className="ribbon bg-yellow-200 text-black">FEW REMAINING</span> : ''}
                             <img
                                 alt="Product gallery 1"
                                 src={`${product.productImage}`}

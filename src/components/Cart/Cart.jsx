@@ -5,11 +5,17 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import useTheme from "../../context/themeContext.js"
 import emptyCart from "../../assets/empty-cart.png"
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 function Cart() {
 
     // To view all items and its price. 
     const [isViewAll, setIsViewAll] = useState(false)
+
+    if (localStorage.getItem("toastError")) {
+        toast.error(localStorage.getItem("toastError"))
+        localStorage.removeItem("toastError")
+    }
 
     // Getting the card context. 
     const { state } = useContext(cartContext)
@@ -18,11 +24,19 @@ function Cart() {
     const { cartItems, totalCartItems } = state;
     console.log("Cart Items : ", cartItems);
 
+    // const [isAnyProductOutOfStock, setIsAnyProductOutOfStock] = useState(false);
+
     // Calculating the Total Bill using Memo Hook
     const totalBill = useMemo(() => {
         const amount = cartItems ? cartItems.reduce((total, item) => total + item.productPrice * item.productQuantity, 0) : 0;
         return Math.round(amount * 1000) / 1000
     }, [cartItems]);
+
+    const isAnyProductOutOfStock = useMemo(() => {
+        let data = cartItems.filter((item) => item.productInStock === 0)
+
+        return data.length === 0 ? false : true;
+    })
 
     const { themeMode } = useTheme()
 
@@ -122,7 +136,7 @@ function Cart() {
                                                 </dt>
                                                 <dd className="text-md font-bold dark:text-green-400 text-green-900">Free</dd>
                                             </div>
-                                            <div className="flex items-center justify-between  border-black dark:border-white border-y-[5px] border-dashed py-4 ">
+                                            <div className="flex items-center justify-between  border-black dark:border-white border-t-[5px] border-dashed py-4 ">
                                                 <dt className="text-base font-black tracking-wide text-black/90 dark:text-white/90">Total Amount</dt>
 
                                                 {/* TODO : Add Discount Functionality */}
@@ -141,14 +155,26 @@ function Cart() {
 
                             {/* Adding the Checkout Button */}
                             <div className='text-center'>
-                                <Link to={"/checkout"}>
-                                    <button type="button" className="px-24 py-4 my-5 bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-200  font-medium rounded-lg text-sm text-center inline-flex items-center me-2 mb-2">
-                                        <svg className="w-5 h-5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill={themeMode === "light" ? "white" : "black"} viewBox="0 0 20 20">
+                                {isAnyProductOutOfStock === false ?
+                                    <Link to={"/checkout"}>
+                                        <button type="button" className="px-24 py-4 my-5 bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-200  font-medium rounded-lg text-sm text-center inline-flex items-center me-2 mb-2">
+                                            <svg className="w-5 h-5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill={themeMode === "light" ? "white" : "black"} viewBox="0 0 20 20">
+                                                <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z" />
+                                            </svg>
+                                            <span className="text-lg text-white dark:text-black font-bold" disabled={false}>Checkout</span>
+                                        </button>
+                                    </Link>
+                                    :
+                                    <button type="button"
+                                        className="px-24 py-4 my-5 bg-gray-400 dark:bg-gray-700 font-medium rounded-lg text-sm text-center inline-flex items-center me-2 mb-2 cursor-not-allowed"
+                                        disabled>
+                                        <svg className="w-5 h-5 me-2 fill-gray-700 dark:fill-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                             <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z" />
                                         </svg>
-                                        <span className="text-lg text-white dark:text-black font-bold" disabled={cartItems.length === 0}>Checkout</span>
+                                        <span className="text-lg text-gray-700 dark:text-gray-400 font-bold">Checkout</span>
                                     </button>
-                                </Link>
+
+                                }
                             </div>
                         </React.Fragment>
                     }

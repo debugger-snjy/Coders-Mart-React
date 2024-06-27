@@ -13,8 +13,9 @@ function CartItem({ product }) {
     return (
         <div key={product._id} className="bg-gray-200 px-5 py-2 mb-5 rounded-lg border-2 border-black hover:shadow-md hover:shadow-black dark:bg-gray-900 dark:border-white dark:hover:bg-gray-800 dark:hover:shadow-white">
             <li className="flex py-2 sm:py-2 items-center">
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0 relative">
                     <Link to={`/product/${product._id}`}>
+                        {product.productInStock === 0 ? <span className="ribbon text-sm">OUT OF STOCK</span> : product.productInStock <= 5 ? <span className="ribbon text-sm bg-yellow-200 text-black">FEW REMAINING</span> : ''}
                         <img
                             src={product.productImage}
                             alt={product.productName}
@@ -39,21 +40,38 @@ function CartItem({ product }) {
                                 </p>
                             </div>
                             <p className="text-lg font-semibold select-none mt-2">
-                                {/* Calling the decrement action function to Reduce item by one */}
-                                {product.productQuantity == 1 ? < MinusCircleIcon size={20} className="text-gray-500 inline mr-1" /> : < MinusCircleIcon size={20} className="text-black dark:text-white inline mr-1" onClick={async () => {
-                                    dispatch({ type: "DECREMENT_ITEM_IN_CART", payload: { _id: product._id } })
-                                    if (isUserLoggedIn()) {
-                                        await updateQuantityInCartItem(product._id, 1, "remove")
-                                    }
-                                }} />}
-                                <span className='mx-2 text-bold text-lg'>{product.productQuantity}</span>
-                                {/* Calling the Increment action function to increase item by one */}
-                                <PlusCircleIcon size={20} className="text-black dark:text-white inline ml-1" onClick={async () => {
-                                    dispatch({ type: "INCREMENT_ITEM_IN_CART", payload: { _id: product._id } })
-                                    if (isUserLoggedIn()) {
-                                        await updateQuantityInCartItem(product._id, 1, "add")
-                                    }
-                                }} />
+                                {product.productInStock !== 0 ?
+                                    <>
+                                        {/* Calling the decrement action function to Reduce item by one */}
+                                        {product.productQuantity == 1 ? < MinusCircleIcon size={20} className="text-gray-500 inline mr-1" /> : < MinusCircleIcon size={20} className="text-black dark:text-white inline mr-1" onClick={async () => {
+                                            dispatch({ type: "DECREMENT_ITEM_IN_CART", payload: { _id: product._id } })
+                                            if (isUserLoggedIn()) {
+                                                await updateQuantityInCartItem(product._id, 1, "remove")
+                                            }
+                                        }} />}
+                                        <span className='mx-2 text-bold text-lg'>{product.productQuantity}</span>
+
+                                        {/* Calling the Increment action function to increase item by one */}
+                                        {
+                                            product.productQuantity === product.productInStock ? <PlusCircleIcon size={20} className="text-gray-500 inline ml-1" /> : <PlusCircleIcon size={20} className="text-black dark:text-white inline ml-1" onClick={async () => {
+                                                dispatch({ type: "INCREMENT_ITEM_IN_CART", payload: { _id: product._id } })
+                                                if (isUserLoggedIn()) {
+                                                    await updateQuantityInCartItem(product._id, 1, "add")
+                                                }
+                                            }} />
+                                        }
+                                    </>
+                                    :
+                                    <>
+                                        {/* Calling the decrement action function to Reduce item by one */}
+                                        < MinusCircleIcon size={20} className="text-gray-500 inline mr-1" />
+
+                                        <span className='mx-2 text-bold text-lg'>0</span>
+
+                                        {/* Calling the Increment action function to increase item by one */}
+                                        <PlusCircleIcon size={20} className="text-gray-500 inline ml-1" />
+                                    </>
+                                }
                             </p>
 
                         </div>
