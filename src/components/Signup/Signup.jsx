@@ -11,6 +11,7 @@ function Signup() {
     const [nameInvalid, setNameInvalid] = useState(null)
     const [emailInvalid, setEmailInvalid] = useState(null)
     const [phoneInvalid, setPhoneInvalid] = useState(null)
+    const [showPassword, setShowPassword] = useState(true);
 
     useEffect(() => {
         if (isUserLoggedIn()) {
@@ -18,6 +19,18 @@ function Signup() {
             navigateTo("/");
         }
     })
+
+    const togglePassword = (e) => {
+        setShowPassword(!showPassword);
+        const passwordInput = document.getElementById("password");
+        console.log(passwordInput)
+        if (showPassword) {
+            passwordInput.type = "text"
+        }
+        else {
+            passwordInput.type = "password"
+        }
+    }
 
     const checkInputs = (e) => {
         console.log(e)
@@ -164,7 +177,18 @@ function Signup() {
 
                             <div>
                                 <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password <span className="text-red-700">*</span></label>
-                                <input type="password" onInput={(e) => checkInputs(e)} name="password" id="password" placeholder="Your Password" className={`bg-gray-50 border-gray-300 ${passwordInvalid === true ? 'border-[3px] dark:border-red-300 border-red-500' : passwordInvalid === false ? 'border-[3px] dark:border-green-400 border-green-500 ' : ''} text-gray-900 text-sm rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white `} required />
+                                <div className="relative">
+                                    <input type="password" onInput={(e) => checkInputs(e)} id="password" name="password" className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white `} placeholder="Your Password" autocomplete="off" />
+                                    <span class="absolute inset-y-0 right-4 flex items-center pl-2">
+                                        <button type="button" class="p-1 text-gray-400" onClick={(e) => togglePassword(e)}>
+                                            {showPassword ? (
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
+                                            ) : (
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-off"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" x2="22" y1="2" y2="22" /></svg>
+                                            )}
+                                        </button>
+                                    </span>
+                                </div>
                                 {passwordInvalid === true && <p id="helper-text-explanation" class="mt-2 text-sm text-red-800 dark:text-red-400">Password Must Contain atleast 8 Characters and atleast 1 Upper, 1 Lower, 1 Special and 1 Number in Your Password</p>}
                             </div>
                             <div>
