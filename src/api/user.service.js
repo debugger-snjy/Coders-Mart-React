@@ -70,10 +70,10 @@ const loginUserAPI = async (userLoginData) => {
             console.log(itemsInLocal)
 
             if (itemsInLocal.length !== 0) {
-                await itemsInLocal.map(async (item) => {
-                    const response = await addItemToCart(item._id, item.productQuantity,false);
+                await Promise.all(itemsInLocal.map(async (item) => {
+                    const response = await addItemToCart(item._id, item.productQuantity, false);
                     console.log("Saved : ", response.data)
-                })
+                }))
             }
 
             console.log("All Saved!!s")
