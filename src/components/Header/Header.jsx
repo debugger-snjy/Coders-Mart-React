@@ -146,7 +146,7 @@ function Header() {
                     <>
                         <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" className="w-10 h-10 rounded-full cursor-pointer" src="https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png" alt="User dropdown" />
 
-                        <div id="userDropdown" className="z-10 relative hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                        <div id="userDropdown" className="z-10 relative hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600" style={{ position: 'absolute', inset: '0px 0px auto auto', margin: ' 0px', transform: 'translate3d(-40px, 61.8182px, 0px)' }}>
                             <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
                                 <div>{JSON.parse(localStorage.getItem("user")) ? JSON.parse(localStorage.getItem("user")).name : "Guest User"}</div>
                             </div>
