@@ -34,7 +34,7 @@ function ProductDetails() {
 
         fetchProductData();
 
-    }, [setProduct]); // Dependency array with id
+    }, []); // Dependency array with id
 
     return (
         <>
@@ -43,7 +43,7 @@ function ProductDetails() {
 
                     <div className="flex flex-col space-y-4">
                         <div className="overflow-hidden rounded-md relative">
-                            {product.productInStock && product.productInStock === 0 ? <span className="ribbon">OUT OF STOCK</span> : product.productInStock <= 5 ? <span className="ribbon bg-yellow-200 text-black">FEW REMAINING</span> : ''}
+                            {product.productInStock === 0 ? <span className="ribbon">OUT OF STOCK</span> : product.productInStock <= 5 ? <span className="ribbon bg-yellow-200 text-black">FEW REMAINING</span> : ''}
                             <img
                                 alt="Product gallery 1"
                                 src={`${product.productImage}`}
@@ -57,48 +57,51 @@ function ProductDetails() {
                                 <p className="text-lg font-semibold m-0">₹{product.productPrice}</p>
                             </div>
                             <div className='flex flex-row space-x-5'>
-                                {product.productInStock !== 0 && <div>
-                                    <div className='text-lg font-medium'>Quantity</div>
-                                    <p className="text-lg font-semibold select-none">
-
-                                        {/* Decreasing product quantity to Order */}
-                                        {qty == 1 ? < MinusCircleIcon size={20} className="text-gray-500 dark:text-gray-700 inline mr-1" disabled={true} onClick={() => setQty((prevQty) => prevQty == 1 ? prevQty : prevQty - 1)} /> : < MinusCircleIcon size={20} className="text-black dark:text-white inline mr-1" onClick={() => setQty((prevQty) => prevQty == 1 ? prevQty : prevQty - 1)} />}
-                                        <span className='mx-2 text-bold text-lg'>{qty}</span>
-                                        {/* Increasing product quantity to Order  */}
-                                        {/* <PlusCircleIcon size={20} className="text-black dark:text-white inline ml-1" onClick={() => setQty((prevQty) => prevQty + 1)} /> */}
-                                        {qty >= product.productInStock ? < PlusCircleIcon size={20} className="text-gray-500 dark:text-gray-700 inline ml-1" disabled={true} /> : < PlusCircleIcon size={20} className="text-black dark:text-white inline ml-1" onClick={() => setQty((prevQty) => prevQty + 1)} />}
-                                    </p>
-                                </div>}
                                 <div>
-                                    {/* Button to add the item in the card */}
-                                    {
-                                        product.productInStock === 0 ?
-                                            <button
+                                    {product.productInStock === 0 && <button
+                                        type="button"
+                                        className="select-none rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:bg-gray-400 dark:text-gray-800"
+                                        disabled:true
+                                    >
+                                        OUT OF STOCK
+                                    </button>}
+
+                                    {product.productInStock > 0 &&
+                                        <>
+                                            {/* Button to add the item in the card */}
+                                            {((state.cartItems && state.cartItems.find((item) => item._id === product._id) === undefined) || !state.cartItems) && <button
                                                 type="button"
-                                                className="select-none rounded-md bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-300 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:bg-gray-400 dark:text-gray-800"
-                                                disabled:true
-                                            >
-                                                OUT OF STOCK
-                                            </button>
-                                            :
-                                            <button
-                                                type="button"
-                                                className="select-none flex rounded-md bg-black px-10 py-5 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:bg-white dark:text-black dark:hover:bg-white/80  dark:focus-visible:outline-white"
+                                                className="select-none rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:bg-white dark:text-black dark:hover:bg-white/80  dark:focus-visible:outline-white"
                                                 onClick={
                                                     async () => {
                                                         console.log("Product : ", product);
-                                                        dispatch({ type: "ADD_ITEM_IN_CART", payload: { item: { ...product, productQuantity: qty } } })
+                                                        dispatch({ type: "ADD_ITEM_IN_CART", payload: { item: { ...product, productQuantity: 1 } } })
                                                         if (isUserLoggedIn()) {
-                                                            await addItemToCart(product._id, qty, true)
-                                                            toast.success(response.data.message);
+                                                            await addItemToCart(product._id, qty, false)
                                                         }
                                                         setQty(1)
                                                     }
                                                 }
                                             >
-                                                <ShoppingBagIcon className='inline mr-1' height={"24px"} width={"24px"} /> <span className="text-base font-bold">Add To Cart</span>
-                                            </button>
-                                    }
+                                                Add To Cart
+                                            </button>}
+                                            {(state.cartItems && state.cartItems.find((item) => item._id === product._id) !== undefined) && <button
+                                                type="button"
+                                                className="select-none rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:bg-white dark:text-black dark:hover:bg-white/80  dark:focus-visible:outline-white"
+                                                onClick={
+                                                    async () => {
+                                                        console.log("Product : ", product);
+                                                        dispatch({ type: "REMOVE_ITEM_IN_CART", payload: { _id: product._id } })
+                                                        if (isUserLoggedIn()) {
+                                                            await removeItemFromCart(product._id)
+                                                        }
+                                                        setQty(1)
+                                                    }
+                                                }
+                                            >
+                                                Remove From Cart
+                                            </button>}
+                                        </>}
                                 </div>
                             </div>
                         </div>
