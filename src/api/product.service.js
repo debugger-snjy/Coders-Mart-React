@@ -4,7 +4,7 @@ import { fetchToken, fetchUser } from "../utils/tokenOperations";
 const server = 'http://localhost:8000/v1/api';
 
 const fetchAllProductsAPI = async () => {
-    const url = `${server}/products/`;
+    const url = `${import.meta.env.VITE_APIURL}/products/`;
 
     try {
         const response = await axios.get(url, {}, {
@@ -24,7 +24,7 @@ const fetchAllProductsAPI = async () => {
 }
 
 const addProductsAPI = async () => {
-    const url = `${server}/products/add`;
+    const url = `${import.meta.env.VITE_APIURL}/products/add`;
 
     try {
         const response = await axios.post(url, {}, {
@@ -44,7 +44,7 @@ const addProductsAPI = async () => {
 }
 
 const fetchProductAPI = async (id) => {
-    const url = `${server}/products/${id}`;
+    const url = `${import.meta.env.VITE_APIURL}/products/${id}`;
 
     try {
         const response = await axios.get(url, {}, {

@@ -4,7 +4,7 @@ import { fetchToken, fetchUser } from "../utils/tokenOperations";
 const server = 'http://localhost:8000/v1/api';
 
 const placeOrderAPI = async (paymentMode, address) => {
-    const url = `${server}/order/`;
+    const url = `${import.meta.env.VITE_APIURL}/order/`;
 
     try {
         const response = await axios.post(url, {
@@ -28,7 +28,7 @@ const placeOrderAPI = async (paymentMode, address) => {
 }
 
 const getAllPlacedOrders = async () => {
-    const url = `${server}/order/`;
+    const url = `${import.meta.env.VITE_APIURL}/order/`;
 
     try {
         const response = await axios.get(url, {

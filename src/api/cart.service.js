@@ -6,7 +6,7 @@ const server = 'http://localhost:8000/v1/api';
 
 const addItemToCart = async (productID, quantity, showMsg) => {
     try {
-        const response = await axios.post(`${server}/cart/`, {
+        const response = await axios.post(`${import.meta.env.VITE_APIURL}/cart/`, {
             productID,
             quantity,
         }, {
@@ -32,7 +32,7 @@ const addItemToCart = async (productID, quantity, showMsg) => {
 
 const removeItemFromCart = async (productID) => {
     try {
-        const response = await axios.delete(`${server}/cart/item/${productID}`, {
+        const response = await axios.delete(`${import.meta.env.VITE_APIURL}/cart/item/${productID}`, {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + JSON.parse(localStorage.getItem("token"))
@@ -52,7 +52,7 @@ const removeItemFromCart = async (productID) => {
 
 const updateQuantityInCartItem = async (productID, quantity, operation) => {
     try {
-        const response = await axios.patch(`${server}/cart/`, {
+        const response = await axios.patch(`${import.meta.env.VITE_APIURL}/cart/`, {
             productID,
             quantity,
             qtyOperation: operation, // "add" or "remove"
@@ -78,7 +78,7 @@ const updateQuantityInCartItem = async (productID, quantity, operation) => {
 
 const getCartItems = async () => {
     try {
-        const response = await axios.get(`${server}/cart/`, {
+        const response = await axios.get(`${import.meta.env.VITE_APIURL}/cart/`, {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + JSON.parse(localStorage.getItem("token"))
@@ -98,7 +98,7 @@ const getCartItems = async () => {
 
 const emptyCart = async () => {
     try {
-        const response = await axios.delete(`${server}/cart/`, {
+        const response = await axios.delete(`${import.meta.env.VITE_APIURL}/cart/`, {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + JSON.parse(localStorage.getItem("token"))

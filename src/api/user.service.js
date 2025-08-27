@@ -7,7 +7,7 @@ const server = 'http://localhost:8000/v1/api';
 
 // Function to create a new user
 const createNewUserAPI = async (userData) => {
-    const url = `${server}/user/register`;
+    const url = `${import.meta.env.VITE_APIURL}/user/register`;
     const data = {
         role: 'customer',
         gender: userData.gender ?? "",
@@ -37,7 +37,7 @@ const createNewUserAPI = async (userData) => {
 
 // Function to login a user
 const loginUserAPI = async (userLoginData) => {
-    const url = `${server}/user/login`;
+    const url = `${import.meta.env.VITE_APIURL}/user/login`;
     const data = {
         email: userLoginData.email ?? "",
         password: userLoginData.password ?? ""
@@ -124,7 +124,7 @@ const loginUserAPI = async (userLoginData) => {
 
 // Function to login a user
 const logoutUserAPI = async () => {
-    const url = `${server}/user/logout`;
+    const url = `${import.meta.env.VITE_APIURL}/user/logout`;
 
     const user = fetchUser();
     const token = fetchToken();
